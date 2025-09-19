@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agri-Connect | Future of Farming</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb; /* Off-white background */
+        }
+        html { scroll-behavior: smooth; }
+        .hero-bg {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url('https://placehold.co/1920x1080/a3e635/1f2937?text=Modern+Farm');
+            background-size: cover; background-position: center; background-attachment: fixed;
+        }
+        .service-card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; cursor: pointer;
+        }
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        .section-title { position: relative; padding-bottom: 0.5rem; margin-bottom: 2rem; }
+        .section-title::after {
+            content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 80px; height: 4px; background-color: #22c55e; border-radius: 2px;
+        }
+        /* Modal styles */
+        .modal-backdrop {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6); z-index: 100;
+            justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.3s ease-in-out;
+        }
+        .modal-backdrop.show {
+            opacity: 1;
+        }
+        .modal-content {
+            max-height: 90vh;
+            transform: scale(0.95);
+            opacity: 0;
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+        .modal-backdrop.show .modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+        /* Loader animation */
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loader { animation: spin 1s linear infinite; }
+        /* Chat bubble styles */
+        .chat-bubble { max-width: 80%; }
+        .chat-bubble.user { background-color: #dcfce7; align-self: flex-end; }
+        .chat-bubble.bot { background-color: #e5e7eb; align-self: flex-start; }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Header -->
+    <header class="bg-white/80 backdrop-blur-md shadow-sm fixed w-full z-50 transition-all duration-300">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-green-600" data-lang="title">Agri-Connect</a>
+            
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#home" class="text-gray-600 hover:text-green-600 font-medium" data-lang="nav_home">Home</a>
+                <a href="#services" class="text-gray-600 hover:text-green-600 font-medium" data-lang="nav_services">Services</a>
+                <a href="#about" class="text-gray-600 hover:text-green-600 font-medium" data-lang="nav_about">About</a>
+                <a href="#contact" class="text-gray-600 hover:text-green-600 font-medium" data-lang="nav_contact">Contact</a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                 <!-- Language Selector -->
+                <div class="relative">
+                    <select id="language-switcher" class="appearance-none bg-gray-100 border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-green-500 cursor-pointer">
+                        <option value="en">English</option>
+                        <option value="hi">हिन्दी</option>
+                        <option value="ml">മലയാളം</option>
+                        <option value="kn">ಕನ್ನಡ</option>
+                    </select>
+                </div>
+                <a href="#" id="login-btn" class="hidden md:block bg-green-600 text-white px-5 py-2 rounded-full hover:bg-green-700 transition-colors duration-300 font-semibold" data-lang="login_btn">Login</a>
+                <button id="mobile-menu-button" class="md:hidden text-gray-700 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white">
+            <a href="#home" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-50" data-lang="nav_home">Home</a>
+            <a href="#services" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-50" data-lang="nav_services">Services</a>
+            <a href="#about" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-50" data-lang="nav_about">About</a>
+            <a href="#contact" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-50" data-lang="nav_contact">Contact</a>
+            <a href="#" id="mobile-login-btn" class="block py-2 px-4 text-sm text-green-600 font-semibold hover:bg-gray-50" data-lang="login_btn">Login</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="h-screen hero-bg flex items-center justify-center text-white">
+            <div class="text-center max-w-3xl mx-auto px-4">
+                <h1 class="text-4xl md:text-6xl font-extrabold mb-4 leading-tight" data-lang="hero_title">Connecting Farmers to the Future of Agriculture</h1>
+                <p class="text-lg md:text-xl mb-8 text-gray-200" data-lang="hero_subtitle">Get instant, AI-powered advice for your crops, pests, and market trends. Your digital farming companion.</p>
+                <a href="#services" class="bg-green-600 text-white px-8 py-3 rounded-full font-semibold text-lg hover:bg-green-700 transition duration-300 transform hover:scale-105" data-lang="hero_cta">Discover Our Services</a>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="py-20 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="section-title text-3xl font-bold text-center" data-lang="services_title">Our Services</h2>
+                <p class="text-center text-gray-500 max-w-2xl mx-auto mb-12" data-lang="services_subtitle">We provide a comprehensive suite of tools and information to empower farmers at every stage.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+                    <div class="service-card bg-gray-50 p-6 rounded-xl shadow-lg text-center" data-service="advisory">
+                         <h3 class="text-xl font-bold mb-2" data-lang="service_advisory_title">AI Advisory</h3>
+                        <p class="text-gray-600" data-lang="service_advisory_desc">Get instant answers to your farming queries, powered by advanced AI.</p>
+                    </div>
+                    <div class="service-card bg-gray-50 p-6 rounded-xl shadow-lg text-center" data-service="pest">
+                        <h3 class="text-xl font-bold mb-2" data-lang="service_pest_title">Pest & Disease Detection</h3>
+                        <p class="text-gray-600" data-lang="service_pest_desc">Upload a photo of your crop to identify diseases and get treatment advice.</p>
+                    </div>
+                    <div class="service-card bg-gray-50 p-6 rounded-xl shadow-lg text-center" data-service="strategy">
+                        <h3 class="text-xl font-bold mb-2" data-lang="service_strategy_title">Crop Strategy</h3>
+                        <p class="text-gray-600" data-lang="service_strategy_desc">Get AI-driven recommendations for the most profitable crops to grow in your area.</p>
+                    </div>
+                    <div class="service-card bg-gray-50 p-6 rounded-xl shadow-lg text-center" data-service="market">
+                        <h3 class="text-xl font-bold mb-2" data-lang="service_market_title">Market Information</h3>
+                        <p class="text-gray-600" data-lang="service_market_desc">Access real-time market prices and get AI analysis on market trends.</p>
+                    </div>
+                    <div class="service-card bg-gray-50 p-6 rounded-xl shadow-lg text-center" data-service="weather">
+                        <h3 class="text-xl font-bold mb-2" data-lang="service_weather_title">Weather Forecasting</h3>
+                        <p class="text-gray-600" data-lang="service_weather_desc">Get accurate, location-based weather forecasts to plan your activities.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Us Section -->
+        <section id="about" class="py-20 bg-gray-50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="section-title text-3xl font-bold text-center" data-lang="about_title">About Agri-Connect</h2>
+                <div class="flex flex-col md:flex-row items-center gap-12">
+                    <div class="md:w-1/2">
+                        <img src="https://placehold.co/600x400/f97316/ffffff?text=Farmers+of+Rajasthan" alt="A graphic representing the Agri-Connect team's work with farmers in Rajasthan" class="rounded-2xl shadow-xl">
+                    </div>
+                    <div class="md:w-1/2">
+                        <p class="text-gray-600 mb-4" data-lang="about_p1">
+                            Agri-Connect was forged in the fields of Rajasthan, not in a boardroom. Our journey started by walking alongside farmers, sharing their concerns through more than 10 in-depth interviews with the agricultural communities of Rajasthan. We didn't just collect data; we listened to stories of battling unpredictable monsoons, struggling with arid soil conditions, and fighting the constant war against resilient local pests. These conversations weren't just research; they were our foundation.
+                        </p>
+                        <p class="text-gray-600" data-lang="about_p2">
+                            Every feature on this platform is an answer to a real problem we heard directly from the farmers of Rajasthan. We are obsessed with translating those on-the-ground challenges into simple, powerful digital tools. Our mission is to put practical, data-driven power into the hands of every farmer, ensuring their hard work leads to a more profitable, sustainable, and secure future.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Us Section -->
+        <section id="contact" class="py-20 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="section-title text-3xl font-bold text-center" data-lang="contact_title">Get In Touch</h2>
+                <p class="text-center text-gray-500 max-w-2xl mx-auto mb-12" data-lang="contact_subtitle">Have questions or feedback? We'd love to hear from you. Reach out to us anytime.</p>
+                <div class="max-w-xl mx-auto bg-gray-50 p-8 rounded-2xl shadow-lg">
+                    <form action="#" method="POST" class="space-y-6">
+                        <div>
+                            <label for="name" class="sr-only">Name</label>
+                            <input type="text" name="name" id="name" autocomplete="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Your Name" data-lang-placeholder="placeholder_name">
+                        </div>
+                        <div>
+                            <label for="email" class="sr-only">Email</label>
+                            <input type="email" name="email" id="email" autocomplete="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Your Email" data-lang-placeholder="placeholder_email">
+                        </div>
+                        <div>
+                            <label for="message" class="sr-only">Message</label>
+                            <textarea id="message" name="message" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Your Message" data-lang-placeholder="placeholder_message"></textarea>
+                        </div>
+                        <div>
+                            <button type="submit" class="w-full bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 transition duration-300" data-lang="contact_send_btn">Send Message</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FLOATING CHATBOT BUTTON -->
+    <button id="chatbot-open-btn" class="fixed bottom-6 right-6 bg-green-600 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center hover:bg-green-700 transition-transform transform hover:scale-110 z-40">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+    </button>
+    
+    <!-- MODALS SECTION -->
+    <!-- AI Advisory / Chatbot Modal -->
+    <div id="advisory-modal" class="modal-backdrop">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-lg m-4 modal-content flex flex-col">
+            <header class="p-4 border-b flex justify-between items-center">
+                <h3 class="text-xl font-bold" data-lang="modal_advisory_title">AI Farming Advisor</h3>
+                <button class="modal-close-btn text-gray-500 hover:text-gray-800">&times;</button>
+            </header>
+            <div id="chatbox" class="flex-1 p-4 overflow-y-auto space-y-4 flex flex-col">
+                 <!-- Chat messages will appear here -->
+            </div>
+            <footer class="p-4 border-t">
+                <div class="flex gap-2">
+                    <input type="text" id="chat-input" class="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Ask anything about farming...">
+                    <button id="chat-send-btn" class="bg-green-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-green-700">&rarr;</button>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Pest Detection Modal -->
+    <div id="pest-modal" class="modal-backdrop">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-lg m-4 modal-content">
+            <header class="p-4 border-b flex justify-between items-center">
+                <h3 class="text-xl font-bold" data-lang="modal_pest_title">Pest & Disease Detection</h3>
+                <button class="modal-close-btn text-gray-500 hover:text-gray-800">&times;</button>
+            </header>
+            <div class="p-6 text-center">
+                <input type="file" id="pest-image-upload" class="hidden" accept="image/*">
+                <label for="pest-image-upload" class="cursor-pointer inline-block bg-green-100 text-green-700 font-semibold px-6 py-3 rounded-lg border-2 border-dashed border-green-300 hover:bg-green-200" data-lang="upload_btn">Upload Crop Image</label>
+                <img id="image-preview" class="mt-4 rounded-lg max-h-60 mx-auto hidden" src="" alt="Crop Preview"/>
+                <div id="pest-result" class="mt-4 text-left"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Market Info Modal -->
+    <div id="market-modal" class="modal-backdrop">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-3xl m-4 modal-content overflow-y-auto">
+            <header class="p-4 border-b flex justify-between items-center">
+                <h3 class="text-xl font-bold" data-lang="modal_market_title">Market Information</h3>
+                <button class="modal-close-btn text-gray-500 hover:text-gray-800">&times;</button>
+            </header>
+            <div class="p-6">
+                <p class="text-sm text-gray-500 mb-4" data-lang="market_mock_data">Note: Displaying mock data for demonstration purposes.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-bold mb-2 text-center" data-lang="market_price_trends">Price Trends (Last 6 Months)</h4>
+                        <canvas id="price-chart"></canvas>
+                    </div>
+                    <div>
+                        <h4 class="font-bold mb-2 text-center" data-lang="market_crop_volume">Crop Volume Share</h4>
+                        <canvas id="volume-chart"></canvas>
+                    </div>
+                </div>
+                <div class="mt-6 text-center">
+                    <button id="market-analysis-btn" class="bg-green-600 text-white font-semibold px-6 py-2 rounded-full hover:bg-green-700 transition-transform transform hover:scale-105" data-lang="market_analyze_btn">✨ Analyze Market Trends</button>
+                    <div id="market-analysis-result" class="mt-4 text-left p-4 bg-gray-100 rounded-lg hidden"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Weather Forecast Modal -->
+    <div id="weather-modal" class="modal-backdrop">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-lg m-4 modal-content">
+            <header class="p-4 border-b flex justify-between items-center">
+                <h3 class="text-xl font-bold" data-lang="modal_weather_title">Weather Forecast</h3>
+                <button class="modal-close-btn text-gray-500 hover:text-gray-800">&times;</button>
+            </header>
+            <div class="p-6">
+                <div class="flex gap-2 mb-4">
+                    <input type="text" id="location-input" class="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter your city...">
+                    <button id="get-weather-btn" class="bg-green-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-green-700" data-lang="get_weather_btn">Get</button>
+                </div>
+                <div id="weather-result" class="space-y-2"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Crop Strategy Modal -->
+    <div id="strategy-modal" class="modal-backdrop">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-2xl m-4 modal-content overflow-y-auto">
+            <header class="p-4 border-b flex justify-between items-center">
+                <h3 class="text-xl font-bold" data-lang="modal_strategy_title">Crop Strategy Planner</h3>
+                <button class="modal-close-btn text-gray-500 hover:text-gray-800">&times;</button>
+            </header>
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <input type="text" id="strategy-location-input" class="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter your city/district..." data-lang-placeholder="placeholder_city">
+                    <select id="strategy-soil-input" class="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
+                        <option value="Loamy" data-lang="soil_loamy">Loamy Soil</option>
+                        <option value="Sandy" data-lang="soil_sandy">Sandy Soil</option>
+                        <option value="Clay" data-lang="soil_clay">Clay Soil</option>
+                        <option value="Arid/Desert" data-lang="soil_arid">Arid/Desert Soil</option>
+                    </select>
+                </div>
+                <button id="get-strategy-btn" class="w-full bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 transition duration-300" data-lang="strategy_get_btn">✨ Get Crop Recommendations</button>
+                <div id="strategy-result" class="mt-6"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal-backdrop">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-sm m-4 modal-content">
+            <header class="p-4 border-b flex justify-between items-center">
+                <h3 class="text-xl font-bold" data-lang="login_modal_title">Login to Agri-Connect</h3>
+                <button class="modal-close-btn text-gray-500 hover:text-gray-800">&times;</button>
+            </header>
+            <div class="p-8">
+                <form action="#" class="space-y-6">
+                    <div>
+                        <label for="login-email" class="text-sm font-medium text-gray-700">Email Address</label>
+                        <input type="email" name="login-email" id="login-email" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="you@example.com">
+                    </div>
+                    <div>
+                        <label for="login-password" class="text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" name="login-password" id="login-password" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="••••••••">
+                    </div>
+                    <div>
+                        <button type="submit" class="w-full bg-green-600 text-white font-bold py-2 px-4 rounded-md hover:bg-green-700 transition duration-300">Login</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- All other sections from original HTML -->
+    <!-- ... -->
+    <footer class="bg-gray-800 text-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="mt-8 pt-8 border-t border-gray-700 text-center text-gray-500">
+                <p>&copy; <span id="footer-year"></span> Agri-Connect. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const API_KEY = ""; // Kept empty as per instructions
+            const API_URL_BASE = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
+            
+            // --- LANGUAGE TRANSLATION ---
+            const translations = {
+                en: {
+                    title: "Agri-Connect",
+                    nav_home: "Home", nav_services: "Services", nav_about: "About", nav_contact: "Contact",
+                    login_btn: "Login",
+                    hero_title: "Connecting Farmers to the Future of Agriculture",
+                    hero_subtitle: "Get instant, AI-powered advice for your crops, pests, and market trends. Your digital farming companion.",
+                    hero_cta: "Discover Our Services",
+                    services_title: "Our Services",
+                    services_subtitle: "We provide a comprehensive suite of tools and information to empower farmers at every stage.",
+                    service_advisory_title: "AI Advisory",
+                    service_advisory_desc: "Get instant answers to your farming queries, powered by advanced AI.",
+                    service_pest_title: "Pest & Disease Detection",
+                    service_pest_desc: "Upload a photo of your crop to identify diseases and get treatment advice.",
+                    service_strategy_title: "Crop Strategy",
+                    service_strategy_desc: "Get AI-driven recommendations for the most profitable crops to grow in your area.",
+                    service_market_title: "Market Information",
+                    service_market_desc: "Access real-time market prices and get AI analysis on market trends.",
+                    service_weather_title: "Weather Forecasting",
+                    service_weather_desc: "Get accurate, location-based weather forecasts to plan your activities.",
+                    modal_advisory_title: "AI Farming Advisor",
+                    modal_pest_title: "Pest & Disease Detection",
+                    modal_market_title: "Market Information",
+                    modal_weather_title: "Weather Forecast",
+                    modal_strategy_title: "Crop Strategy Planner",
+                    upload_btn: "Upload Crop Image",
+                    get_weather_btn: "Get",
+                    market_mock_data: "Note: Displaying mock data for demonstration purposes.",
+                    market_price_trends: "Price Trends (Last 6 Months)",
+                    market_crop_volume: "Crop Volume Share",
+                    market_analyze_btn: "✨ Analyze Market Trends",
+                    strategy_get_btn: "✨ Get Crop Recommendations",
+                    soil_loamy: "Loamy Soil", soil_sandy: "Sandy Soil", soil_clay: "Clay Soil", soil_arid: "Arid/Desert Soil",
+                    about_title: "About Agri-Connect",
+                    about_p1: "Agri-Connect was forged in the fields of Rajasthan, not in a boardroom. Our journey started by walking alongside farmers, sharing their concerns through more than 10 in-depth interviews with the agricultural communities of Rajasthan. We didn't just collect data; we listened to stories of battling unpredictable monsoons, struggling with arid soil conditions, and fighting the constant war against resilient local pests. These conversations weren't just research; they were our foundation.",
+                    about_p2: "Every feature on this platform is an answer to a real problem we heard directly from the farmers of Rajasthan. We are obsessed with translating those on-the-ground challenges into simple, powerful digital tools. Our mission is to put practical, data-driven power into the hands of every farmer, ensuring their hard work leads to a more profitable, sustainable, and secure future.",
+                    contact_title: "Get In Touch",
+                    contact_subtitle: "Have questions or feedback? We'd love to hear from you. Reach out to us anytime.",
+                    contact_send_btn: "Send Message",
+                    login_modal_title: "Login to Agri-Connect",
+                    placeholder_name: "Your Name",
+                    placeholder_email: "Your Email",
+                    placeholder_message: "Your Message",
+                    placeholder_city: "Enter your city/district...",
+                },
+                hi: {
+                    title: "एग्री-कनेक्ट",
+                    nav_home: "होम", nav_services: "सेवाएं", nav_about: "हमारे बारे में", nav_contact: "संपर्क",
+                    login_btn: "लॉग इन करें",
+                    hero_title: "किसानों को कृषि के भविष्य से जोड़ना",
+                    hero_subtitle: "अपनी फसलों, कीटों और बाजार के रुझानों के लिए तत्काल, एआई-संचालित सलाह प्राप्त करें। आपका डिजिटल खेती साथी।",
+                    hero_cta: "हमारी सेवाएं खोजें",
+                    services_title: "हमारी सेवाएं",
+                    services_subtitle: "हम हर स्तर पर किसानों को सशक्त बनाने के लिए उपकरणों और सूचनाओं का एक व्यापक सूट प्रदान करते हैं।",
+                    service_advisory_title: "एआई सलाहकार",
+                    service_advisory_desc: "उन्नत एआई द्वारा संचालित, किसी भी भाषा में अपनी खेती संबंधी प्रश्नों के तत्काल उत्तर प्राप्त करें।",
+                    service_pest_title: "कीट और रोग का पता लगाना",
+                    service_pest_desc: "रोगों की पहचान करने और तत्काल उपचार सलाह प्राप्त करने के लिए अपनी फसल की एक तस्वीर अपलोड करें।",
+                    service_strategy_title: "फसल रणनीति",
+                    service_strategy_desc: "अपने क्षेत्र में उगाने के लिए सबसे लाभदायक फसलों के लिए एआई-संचालित सिफारिशें प्राप्त करें।",
+                    service_market_title: "बाजार की जानकारी",
+                    service_market_desc: "वास्तविक समय के बाजार मूल्यों तक पहुंचें और बाजार के रुझानों पर एआई विश्लेषण प्राप्त करें।",
+                    service_weather_title: "मौसम पूर्वानुमान",
+                    service_weather_desc: "अपनी खेती की गतिविधियों को प्रभावी ढंग से करने के लिए सटीक, स्थान-आधारित मौसम पूर्वानुमान प्राप्त करें।",
+                    modal_advisory_title: "एआई कृषि सलाहकार",
+                    modal_pest_title: "कीट एवं रोग पहचान",
+                    modal_market_title: "बाजार की जानकारी",
+                    modal_weather_title: "मौसम पूर्वानुमान",
+                    modal_strategy_title: "फसल रणनीति योजनाकार",
+                    upload_btn: "फसल की फोटो अपलोड करें",
+                    get_weather_btn: "प्राप्त करें",
+                    market_mock_data: "नोट: प्रदर्शन उद्देश्यों के लिए मॉक डेटा प्रदर्शित करना।",
+                    market_price_trends: "मूल्य रुझान (पिछले 6 महीने)",
+                    market_crop_volume: "फसल मात्रा हिस्सेदारी",
+                    market_analyze_btn: "✨ बाजार के रुझानों का विश्लेषण करें",
+                    strategy_get_btn: "✨ फसल सिफारिशें प्राप्त करें",
+                    soil_loamy: "दोमट मिट्टी", soil_sandy: "रेतीली मिट्टी", soil_clay: "चिकनी मिट्टी", soil_arid: "शुष्क/रेगिस्तानी मिट्टी",
+                    about_title: "एग्री-कनेक्ट के बारे में",
+                    about_p1: "एग्री-कनेक्ट का निर्माण किसी बोर्डरूम में नहीं, बल्कि राजस्थान के खेतों में हुआ। हमारी यात्रा किसानों के साथ चलने से शुरू हुई, राजस्थान के कृषि समुदायों के साथ 10 से अधिक गहन साक्षात्कारों के माध्यम से उनकी चिंताओं को साझा करते हुए। हमने सिर्फ डेटा एकत्र नहीं किया; हमने अप्रत्याशित मानसून से जूझने, शुष्क मिट्टी की स्थिति से संघर्ष करने और लचीले स्थानीय कीटों के खिलाफ लगातार युद्ध लड़ने की कहानियाँ सुनीं। ये बातचीतें सिर्फ शोध नहीं थीं; वे हमारी नींव थीं।",
+                    about_p2: "इस प्लेटफ़ॉर्म की हर सुविधा राजस्थान के किसानों से सीधे सुनी गई एक वास्तविक समस्या का उत्तर है। हम उन जमीनी चुनौतियों को सरल, शक्तिशाली डिजिटल उपकरणों में बदलने के लिए जुनूनी हैं। हमारा मिशन हर किसान के हाथों में व्यावहारिक, डेटा-संचालित शक्ति देना है, यह सुनिश्चित करना है कि उनकी कड़ी मेहनत अधिक लाभदायक, टिकाऊ और सुरक्षित भविष्य की ओर ले जाए।",
+                    contact_title: "संपर्क करें",
+                    contact_subtitle: "कोई प्रश्न या प्रतिक्रिया है? हमें आपसे सुनना अच्छा लगेगा। किसी भी समय हमसे संपर्क करें।",
+                    contact_send_btn: "संदेश भेजें",
+                    login_modal_title: "एग्री-कनेक्ट में लॉगिन करें",
+                    placeholder_name: "आपका नाम",
+                    placeholder_email: "आपका ईमेल",
+                    placeholder_message: "आपका संदेश",
+                    placeholder_city: "अपना शहर/जिला दर्ज करें...",
+                },
+                ml: {
+                    title: "അഗ്രി-കണക്ട്",
+                    nav_home: "ഹോം", nav_services: "സേവനങ്ങൾ", nav_about: "ഞങ്ങളെക്കുറിച്ച്", nav_contact: "ബന്ധപ്പെടുക",
+                    login_btn: "ലോഗിൻ ചെയ്യുക",
+                    hero_title: "കർഷകരെ കൃഷിയുടെ ഭാവിയിലേക്ക് ബന്ധിപ്പിക്കുന്നു",
+                    hero_subtitle: "നിങ്ങളുടെ വിളകൾക്കും കീടങ്ങൾക്കും വിപണി പ്രവണതകൾക്കുമായി തൽക്ഷണ, AI- പവർ ഉപദേശം നേടുക.",
+                    hero_cta: "ഞങ്ങളുടെ സേവനങ്ങൾ കണ്ടെത്തുക",
+                    services_title: "ഞങ്ങളുടെ സേവനങ്ങൾ",
+                    service_advisory_title: "AI ഉപദേശം",
+                    service_advisory_desc: "നിങ്ങളുടെ കൃഷി സംബന്ധമായ ചോദ്യങ്ങൾക്ക് ഏത് ഭാഷയിലും തൽക്ഷണ ഉത്തരങ്ങൾ നേടുക.",
+                    service_pest_title: "കീടങ്ങളും രോഗങ്ങളും കണ്ടെത്തൽ",
+                    service_pest_desc: "രോഗങ്ങൾ തിരിച്ചറിയാനും ഉടനടി ചികിത്സാ ഉപദേശം സ്വീകരിക്കാനും നിങ്ങളുടെ വിളയുടെ ഫോട്ടോ അപ്‌ലോഡ് ചെയ്യുക.",
+                    service_strategy_title: "വിള തന്ത്രം",
+                    service_strategy_desc: "നിങ്ങളുടെ പ്രദേശത്ത് വളർത്താൻ ഏറ്റവും ലാഭകരമായ വിളകൾക്കായി AI- চালিত ശുപാർശകൾ നേടുക.",
+                    service_market_title: "വിപണി വിവരങ്ങൾ",
+                    service_market_desc: "തത്സമയ മാർക്കറ്റ് വിലകൾ ആക്‌സസ് ചെയ്യുകയും മാർക്കറ്റ് ട്രെൻഡുകളിൽ AI വിശകലനം നേടുകയും ചെയ്യുക.",
+                    service_weather_title: "കാലാവസ്ഥാ പ്രവചനം",
+                    service_weather_desc: "നിങ്ങളുടെ കാർഷിക പ്രവർത്തനങ്ങൾ ആസൂത്രണം ചെയ്യുന്നതിന് കൃത്യമായ കാലാവസ്ഥാ പ്രവചനങ്ങൾ നേടുക.",
+                    modal_advisory_title: "AI കാർഷിക ഉപദേശകൻ",
+                    modal_pest_title: "കീട-രോഗ നിർണ്ണയം",
+                    modal_market_title: "വിപണി വിവരങ്ങൾ",
+                    modal_weather_title: "കാലാവസ്ഥാ പ്രവചനം",
+                    modal_strategy_title: "വിള തന്ത്ര പ്ലാനർ",
+                    upload_btn: "വിളയുടെ ചിത്രം അപ്‌ലോഡ് ചെയ്യുക",
+                    get_weather_btn: "നേടുക",
+                    market_mock_data: "ശ്രദ്ധിക്കുക: ഡെമോൺസ്‌ട്രേഷൻ ആവശ്യങ്ങൾക്കായി മോക്ക് ഡാറ്റ പ്രദർശിപ്പിക്കുന്നു.",
+                    market_price_trends: "വില പ്രവണതകൾ (കഴിഞ്ഞ 6 മാസം)",
+                    market_crop_volume: "വിളയുടെ അളവ് പങ്കിടൽ",
+                    market_analyze_btn: "✨ മാർക്കറ്റ് ട്രെൻഡുകൾ വിശകലനം ചെയ്യുക",
+                    strategy_get_btn: "✨ വിള ശുപാർശകൾ നേടുക",
+                    soil_loamy: "ചെളി മണ്ണ്", soil_sandy: "മണൽ മണ്ണ്", soil_clay: "കളിമണ്ണ്", soil_arid: "വരണ്ട/മരുഭൂമി മണ്ണ്",
+                    about_title: "അഗ്രി-കണക്റ്റിനെക്കുറിച്ച്",
+                    about_p1: "അഗ്രി-കണക്ട് രൂപപ്പെട്ടത് ഒരു ബോർഡ് റൂമിലല്ല, രാജസ്ഥാനിലെ വയലുകളിലാണ്. ഞങ്ങളുടെ യാത്ര ആരംഭിച്ചത് കർഷകർക്കൊപ്പം നടന്നുകൊണ്ടാണ്, രാജസ്ഥാനിലെ കാർഷിക സമൂഹങ്ങളുമായി 10-ൽ അധികം ആഴത്തിലുള്ള അഭിമുഖങ്ങളിലൂടെ അവരുടെ ആശങ്കകൾ പങ്കുവെച്ചുകൊണ്ട്. ഞങ്ങൾ ഡാറ്റ ശേഖരിക്കുക മാത്രമല്ല ചെയ്തത്; പ്രവചനാതീതമായ മൺസൂണിനോട് പൊരുതുന്നതിൻ്റെയും, വരണ്ട മണ്ണിൻ്റെ അവസ്ഥകളുമായി മല്ലിടുന്നതിൻ്റെയും, പ്രാദേശിക കീടങ്ങൾക്കെതിരായ നിരന്തരമായ യുദ്ധത്തിൻ്റെയും കഥകൾ ഞങ്ങൾ കേട്ടു. ഈ സംഭാഷണങ്ങൾ വെറുമൊരു ഗവേഷണമായിരുന്നില്ല; അത് ഞങ്ങളുടെ അടിത്തറയായിരുന്നു.",
+                    about_p2: "ഈ പ്ലാറ്റ്‌ഫോമിലെ ഓരോ ഫീച്ചറും ഞങ്ങൾ രാജസ്ഥാനിലെ കർഷകരിൽ നിന്ന് നേരിട്ട് കേട്ട ഒരു യഥാർത്ഥ പ്രശ്നത്തിനുള്ള ഉത്തരമാണ്. ആ താഴെത്തട്ടിലുള്ള വെല്ലുവിളികളെ ലളിതവും ശക്തവുമായ ഡിജിറ്റൽ ഉപകരണങ്ങളാക്കി മാറ്റുന്നതിൽ ഞങ്ങൾ ശ്രദ്ധാലുക്കളാണ്. ഓരോ കർഷകൻ്റെയും കയ്യിൽ പ്രായോഗികവും ഡാറ്റാധിഷ്ഠിതവുമായ ശക്തി നൽകുക, അവരുടെ കഠിനാധ്വാനം കൂടുതൽ ലാഭകരവും സുസ്ഥിരവും സുരക്ഷിതവുമായ ഭാവിയിലേക്ക് നയിക്കുന്നുവെന്ന് ഉറപ്പാക്കുക എന്നതാണ് ഞങ്ങളുടെ ദൗത്യം.",
+                    contact_title: "ബന്ധപ്പെടുക",
+                    contact_subtitle: "ചോദ്യങ്ങളോ പ്രതികരണങ്ങളോ ഉണ്ടോ? നിങ്ങളിൽ നിന്ന് കേൾക്കാൻ ഞങ്ങൾ ആഗ്രഹിക്കുന്നു. എപ്പോൾ വേണമെങ്കിലും ഞങ്ങളെ സമീപിക്കുക.",
+                    contact_send_btn: "സന്ദേശം അയക്കുക",
+                    login_modal_title: "അഗ്രി-കണക്റ്റിലേക്ക് ലോഗിൻ ചെയ്യുക",
+                    placeholder_name: "നിങ്ങളുടെ പേര്",
+                    placeholder_email: "നിങ്ങളുടെ ഇമെയിൽ",
+                    placeholder_message: "നിങ്ങളുടെ സന്ദേശം",
+                    placeholder_city: "നിങ്ങളുടെ നഗരം/ജില്ല നൽകുക...",
+                },
+                kn: {
+                    title: "ಅಗ್ರಿ-ಕನೆಕ್ಟ್",
+                    nav_home: "ಹೋಮ್", nav_services: "ಸೇವೆಗಳು", nav_about: "ನಮ್ಮ ಬಗ್ಗೆ", nav_contact: "ಸಂಪರ್ಕಿಸಿ",
+                    login_btn: "ಲಾಗಿನ್ ಮಾಡಿ",
+                    hero_title: "ರೈತರನ್ನು ಕೃಷಿಯ ಭವಿಷ್ಯಕ್ಕೆ ಸಂಪರ್ಕಿಸುವುದು",
+                    hero_subtitle: "ನಿಮ್ಮ ಬೆಳೆಗಳು, ಕೀಟಗಳು ಮತ್ತು ಮಾರುಕಟ್ಟೆ ಪ್ರವೃತ್ತಿಗಳಿಗಾಗಿ ತ್ವರಿತ, AI-ಚಾಲಿತ ಸಲಹೆ ಪಡೆಯಿರಿ.",
+                    hero_cta: "ನಮ್ಮ ಸೇವೆಗಳನ್ನು ಅನ್ವೇಷಿಸಿ",
+                    services_title: "ನಮ್ಮ ಸೇವೆಗಳು",
+                    service_advisory_title: "AI ಸಲಹೆ",
+                    service_advisory_desc: "ನಿಮ್ಮ ಕೃಷಿ ಪ್ರಶ್ನೆಗಳಿಗೆ ಯಾವುದೇ ಭಾಷೆಯಲ್ಲಿ ತ್ವರಿತ ಉತ್ತರಗಳನ್ನು ಪಡೆಯಿರಿ.",
+                    service_pest_title: "ಕೀಟ ಮತ್ತು ರೋಗ ಪತ್ತೆ",
+                    service_pest_desc: "ರೋಗಗಳನ್ನು ಗುರುತಿಸಲು ಮತ್ತು ತಕ್ಷಣದ ಚಿಕಿತ್ಸಾ ಸಲಹೆಯನ್ನು ಪಡೆಯಲು ನಿಮ್ಮ ಬೆಳೆಯ ಫೋಟೋವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.",
+                    service_strategy_title: "ಬೆಳೆ ತಂತ್ರ",
+                    service_strategy_desc: "ನಿಮ್ಮ ಪ್ರದೇಶದಲ್ಲಿ ಬೆಳೆಯಲು ಅತ್ಯಂತ ಲಾಭದಾಯಕ ಬೆಳೆಗಳಿಗಾಗಿ AI-ಚಾಲಿತ ಶಿಫಾರಸುಗಳನ್ನು ಪಡೆಯಿರಿ.",
+                    service_market_title: "ಮಾರುಕಟ್ಟೆ ಮಾಹಿತಿ",
+                    service_market_desc: "ನೈಜ-ಸಮಯದ ಮಾರುಕಟ್ಟೆ ದರಗಳನ್ನು ಪ್ರವೇಶಿಸಿ ಮತ್ತು ಮಾರುಕಟ್ಟೆ ಪ್ರವೃತ್ತಿಗಳ ಮೇಲೆ AI ವಿಶ್ಲೇಷಣೆ ಪಡೆಯಿರಿ.",
+                    service_weather_title: "ಹವಾಮಾನ ಮುನ್ಸೂಚನೆ",
+                    service_weather_desc: "ನಿಮ್ಮ ಕೃಷಿ ಚಟುವಟಿಕೆಗಳನ್ನು ಯೋಜಿಸಲು ನಿಖರವಾದ ಹವಾಮಾನ ಮುನ್ಸೂಚನೆಗಳನ್ನು ಪಡೆಯಿರಿ.",
+                    modal_advisory_title: "AI ಕೃಷಿ ಸಲಹೆಗಾರ",
+                    modal_pest_title: "ಕೀಟ ಮತ್ತು ರೋಗ ಪತ್ತೆ",
+                    modal_market_title: "ಮಾರುಕಟ್ಟೆ ಮಾಹಿತಿ",
+                    modal_weather_title: "ಹವಾಮಾನ ಮುನ್ಸೂಚನೆ",
+                    modal_strategy_title: "ಬೆಳೆ ತಂತ್ರ ಯೋಜಕ",
+                    upload_btn: "ಬೆಳೆ ಚಿತ್ರವನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಿ",
+                    get_weather_btn: "ಪಡೆಯಿರಿ",
+                    market_mock_data: "ಗಮನಿಸಿ: ಪ್ರದರ್ಶನ ಉದ್ದೇಶಗಳಿಗಾಗಿ ಅಣಕು ಡೇಟಾವನ್ನು ಪ್ರದರ್ಶಿಸಲಾಗುತ್ತಿದೆ.",
+                    market_price_trends: "ಬೆಲೆ ಪ್ರವೃತ್ತಿಗಳು (ಕಳೆದ 6 ತಿಂಗಳುಗಳು)",
+                    market_crop_volume: "ಬೆಳೆ ಪ್ರಮಾಣದ ಪಾಲು",
+                    market_analyze_btn: "✨ ಮಾರುಕಟ್ಟೆ ಪ್ರವೃತ್ತಿಗಳನ್ನು ವಿಶ್ಲೇಷಿಸಿ",
+                    strategy_get_btn: "✨ ಬೆಳೆ ಶಿಫಾರಸುಗಳನ್ನು ಪಡೆಯಿರಿ",
+                    soil_loamy: "ಗೋಡು ಮಣ್ಣು", soil_sandy: "ಮರಳು ಮಣ್ಣು", soil_clay: "ಜಿೇಡಿ ಮಣ್ಣು", soil_arid: "ಶುಷ್ಕ/ಮರುಭೂಮಿ ಮಣ್ಣು",
+                    about_title: "ಅಗ್ರಿ-ಕನೆಕ್ಟ್ ಬಗ್ಗೆ",
+                    about_p1: "ಅಗ್ರಿ-ಕನೆಕ್ಟ್ ಅನ್ನು ಬೋರ್ಡ್‌ರೂಮ್‌ನಲ್ಲಿ ಅಲ್ಲ, ರಾಜಸ್ಥಾನದ ಹೊಲಗಳಲ್ಲಿ ರೂಪಿಸಲಾಯಿತು. ನಮ್ಮ ಪ್ರಯಾಣವು ರೈತರೊಂದಿಗೆ ನಡೆಯುವುದರೊಂದಿಗೆ ಪ್ರಾರಂಭವಾಯಿತು, ರಾಜಸ್ಥಾನದ ಕೃಷಿ ಸಮುದಾಯಗಳೊಂದಿಗೆ 10 ಕ್ಕೂ ಹೆಚ್ಚು ಆಳವಾದ ಸಂದರ್ಶನಗಳ ಮೂಲಕ ಅವರ ಕಳವಳಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳುವುದು. ನಾವು ಕೇವಲ ಡೇಟಾವನ್ನು ಸಂಗ್ರಹಿಸಲಿಲ್ಲ; ನಾವು ಅನಿರೀಕ್ಷಿತ ಮಾನ್ಸೂನ್‌ಗಳೊಂದಿಗೆ ಹೋರಾಡುವ, ಶುಷ್ಕ ಮಣ್ಣಿನ ಪರಿಸ್ಥಿತಿಗಳೊಂದಿಗೆ ಹೆಣಗಾಡುವ ಮತ್ತು ಸ್ಥಿತಿಸ್ಥಾಪಕ ಸ್ಥಳೀಯ ಕೀಟಗಳ ವಿರುದ್ಧ ನಿರಂತರ ಯುದ್ಧವನ್ನು ಮಾಡುವ ಕಥೆಗಳನ್ನು ಕೇಳಿದ್ದೇವೆ. ಈ ಸಂಭಾಷಣೆಗಳು ಕೇವಲ ಸಂಶೋಧನೆಯಾಗಿರಲಿಲ್ಲ; ಅವು ನಮ್ಮ ಅಡಿಪಾಯವಾಗಿದ್ದವು.",
+                    about_p2: "ಈ ಪ್ಲಾಟ್‌ಫಾರ್ಮ್‌ನಲ್ಲಿನ ಪ್ರತಿಯೊಂದು ವೈಶಿಷ್ಟ್ಯವು ನಾವು ರಾಜಸ್ಥಾನದ ರೈತರಿಂದ ನೇರವಾಗಿ ಕೇಳಿದ ನೈಜ ಸಮಸ್ಯೆಗೆ ಉತ್ತರವಾಗಿದೆ. ಆ ನೆಲಮಟ್ಟದ ಸವಾಲುಗಳನ್ನು ಸರಳ, ಶಕ್ತಿಯುತ ಡಿಜಿಟಲ್ ಸಾಧನಗಳಾಗಿ ಭಾಷಾಂತರಿಸಲು ನಾವು ಗೀಳಾಗಿದ್ದೇವೆ. ಪ್ರತಿಯೊಬ್ಬ ರೈತನ ಕೈಯಲ್ಲಿ ಪ್ರಾಯೋಗಿಕ, ಡೇಟಾ-ಚಾಲಿತ ಶಕ್ತಿಯನ್ನು ಇಡುವುದು, ಅವರ ಕಠಿಣ ಪರಿಶ್ರಮವು ಹೆಚ್ಚು ಲಾಭದಾಯಕ, ಸಮರ್ಥನೀಯ ಮತ್ತು ಸುರಕ್ಷಿತ ಭವಿಷ್ಯಕ್ಕೆ ಕಾರಣವಾಗುತ್ತದೆ ಎಂದು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳುವುದು ನಮ್ಮ ಉದ್ದೇಶವಾಗಿದೆ.",
+                    contact_title: "ಸಂಪರ್ಕದಲ್ಲಿರండి",
+                    contact_subtitle: "ಪ್ರಶ್ನೆಗಳು ಅಥವಾ ಪ್ರತಿಕ್ರಿಯೆ ಇದೆಯೇ? ನಿಮ್ಮಿಂದ ಕೇಳಲು ನಾವು ಇಷ್ಟಪಡುತ್ತೇವೆ. ಯಾವುದೇ ಸಮಯದಲ್ಲಿ ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ.",
+                    contact_send_btn: "ಸಂದೇಶ ಕಳುಹಿಸಿ",
+                    login_modal_title: "ಅಗ್ರಿ-ಕನೆಕ್ಟ್‌ಗೆ ಲಾಗಿನ್ ಮಾಡಿ",
+                    placeholder_name: "ನಿಮ್ಮ ಹೆಸರು",
+                    placeholder_email: "ನಿಮ್ಮ ಇಮೇಲ್",
+                    placeholder_message: "ನಿಮ್ಮ ಸಂದೇಶ",
+                    placeholder_city: "ನಿಮ್ಮ ನಗರ/ಜಿಲ್ಲೆಯನ್ನು ನಮೂದಿಸಿ...",
+                }
+            };
+            
+            const languageSwitcher = document.getElementById('language-switcher');
+            languageSwitcher.addEventListener('change', (e) => switchLanguage(e.target.value));
+            
+            function switchLanguage(lang) {
+                const langData = translations[lang];
+                document.querySelectorAll('[data-lang]').forEach(el => {
+                    const key = el.getAttribute('data-lang');
+                    if (langData[key]) {
+                        el.textContent = langData[key];
+                    }
+                });
+                document.querySelectorAll('[data-lang-placeholder]').forEach(el => {
+                    const key = el.getAttribute('data-lang-placeholder');
+                    if (langData[key]) {
+                        el.placeholder = langData[key];
+                    }
+                });
+            }
+
+            // --- MOBILE MENU ---
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+            document.querySelectorAll('#mobile-menu a').forEach(link => link.addEventListener('click', () => mobileMenu.classList.add('hidden')));
+            document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+            // --- MODAL HANDLING ---
+            const modals = document.querySelectorAll('.modal-backdrop');
+            const serviceCards = document.querySelectorAll('.service-card');
+
+            function openModal(modalId) {
+                const modal = document.getElementById(modalId);
+                if(modal) {
+                    modal.style.display = 'flex';
+                    setTimeout(() => modal.classList.add('show'), 10); // for transition
+                    if (modalId === 'market-modal') renderMarketCharts();
+                }
+            }
+
+            function closeModal() {
+                modals.forEach(modal => {
+                    modal.classList.remove('show');
+                    setTimeout(() => modal.style.display = 'none', 300); // match transition duration
+                });
+            }
+
+            serviceCards.forEach(card => card.addEventListener('click', () => openModal(card.dataset.service + '-modal')));
+            document.querySelectorAll('.modal-close-btn').forEach(btn => btn.addEventListener('click', closeModal));
+            document.getElementById('chatbot-open-btn').addEventListener('click', () => openModal('advisory-modal'));
+            document.getElementById('login-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                openModal('login-modal');
+            });
+            document.getElementById('mobile-login-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                openModal('login-modal');
+            });
+
+
+            // --- GEMINI API CALL HELPER ---
+            async function callGeminiAPI(payload) {
+                 try {
+                    const response = await fetch(API_URL_BASE, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                    const data = await response.json();
+                    if (!data.candidates || !data.candidates[0].content.parts[0].text) {
+                        throw new Error("Invalid API response structure.");
+                    }
+                    return data.candidates[0].content.parts[0].text;
+                } catch (error) {
+                    console.error("Gemini API call failed:", error);
+                    return "Sorry, I couldn't get a response. Please try again.";
+                }
+            }
+            
+            function showLoader(container) {
+                 if (typeof container === 'string') container = document.getElementById(container);
+                 if(container) container.innerHTML = `<div class="flex justify-center items-center p-4"><div class="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full loader"></div></div>`;
+            }
+
+            // --- AI ADVISORY CHATBOT ---
+            const chatbox = document.getElementById('chatbox');
+            const chatInput = document.getElementById('chat-input');
+            const chatSendBtn = document.getElementById('chat-send-btn');
+            
+            async function handleChat() {
+                const userMessage = chatInput.value.trim();
+                if (!userMessage) return;
+
+                appendMessage(userMessage, 'user');
+                chatInput.value = '';
+                showLoader(chatbox);
+                chatbox.scrollTop = chatbox.scrollHeight;
+
+                const systemPrompt = "You are 'Agri-Connect', an expert AI agricultural assistant. Provide clear, concise, and helpful advice to farmers. Answer in the language of the user's query.";
+                const payload = { contents: [{ parts: [{text: systemPrompt + "\n\nUser query: " + userMessage }]}] };
+                const botResponse = await callGeminiAPI(payload);
+                
+                document.querySelector('#chatbox .flex.justify-center')?.remove(); // remove loader
+                appendMessage(botResponse, 'bot');
+            }
+            
+            function appendMessage(text, type) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `chat-bubble p-3 rounded-lg ${type}`;
+                if (type === 'bot') {
+                    // Sanitize and format bot response
+                    messageDiv.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*/g, '<br> &bull; ');
+                } else {
+                     messageDiv.textContent = text;
+                }
+                chatbox.appendChild(messageDiv);
+                chatbox.scrollTop = chatbox.scrollHeight;
+            }
+            
+            chatSendBtn.addEventListener('click', handleChat);
+            chatInput.addEventListener('keypress', (e) => e.key === 'Enter' && handleChat());
+
+            // --- PEST DETECTION ---
+            const pestImageUpload = document.getElementById('pest-image-upload');
+            const imagePreview = document.getElementById('image-preview');
+            const pestResult = document.getElementById('pest-result');
+            
+            pestImageUpload.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                imagePreview.src = URL.createObjectURL(file);
+                imagePreview.classList.remove('hidden');
+                showLoader(pestResult);
+                
+                const reader = new FileReader();
+                reader.onloadend = async () => {
+                    const base64Data = reader.result.split(',')[1];
+                    const payload = {
+                        contents: [{
+                            parts: [
+                                { text: "Analyze this image of a plant. Identify any potential diseases or pests. Provide a brief description of the issue and suggest a common treatment plan." },
+                                { inlineData: { mimeType: file.type, data: base64Data } }
+                            ]
+                        }]
+                    };
+                    const response = await callGeminiAPI(payload);
+                    pestResult.innerHTML = response.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+                };
+                reader.readAsDataURL(file);
+            });
+            
+            // --- MARKET INFO ---
+            const priceData = {
+                labels: ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+                datasets: [
+                    { label: 'Wheat (₹/quintal)', data: [2100, 2150, 2200, 2180, 2250, 2300], borderColor: '#22c55e', tension: 0.1 },
+                    { label: 'Rice (₹/quintal)', data: [3400, 3450, 3500, 3550, 3600, 3580], borderColor: '#f97316', tension: 0.1 }
+                ]
+            };
+
+            function renderMarketCharts() {
+                const priceCtx = document.getElementById('price-chart');
+                const volumeCtx = document.getElementById('volume-chart');
+                // Mock data
+                const volumeData = {
+                    labels: ['Wheat', 'Rice', 'Cotton', 'Sugarcane'],
+                    datasets: [{ data: [40, 30, 15, 15], backgroundColor: ['#22c55e', '#f97316', '#3b82f6', '#eab308'] }]
+                };
+                if(window.priceChart instanceof Chart) window.priceChart.destroy();
+                if(window.volumeChart instanceof Chart) window.volumeChart.destroy();
+                window.priceChart = new Chart(priceCtx, { type: 'line', data: priceData });
+                window.volumeChart = new Chart(volumeCtx, { type: 'pie', data: volumeData });
+            }
+
+            document.getElementById('market-analysis-btn').addEventListener('click', async () => {
+                const resultDiv = document.getElementById('market-analysis-result');
+                resultDiv.classList.remove('hidden');
+                showLoader(resultDiv);
+                
+                const dataSummary = `Wheat prices changed from ${priceData.datasets[0].data[0]} to ${priceData.datasets[0].data.slice(-1)[0]}. Rice prices changed from ${priceData.datasets[1].data[0]} to ${priceData.datasets[1].data.slice(-1)[0]}.`;
+                const prompt = `You are an agricultural market analyst. Here are the price trends per quintal for the last 6 months in Rajasthan: ${dataSummary}. Based on this data, provide a short, easy-to-understand summary for a farmer. What is the general trend for each crop? Is it a good time to sell or hold? Keep the analysis to 2-3 sentences.`;
+                const payload = { contents: [{ parts: [{ text: prompt }] }] };
+
+                const response = await callGeminiAPI(payload);
+                resultDiv.innerHTML = response;
+            });
+
+
+            // --- WEATHER FORECAST ---
+            const locationInput = document.getElementById('location-input');
+            const getWeatherBtn = document.getElementById('get-weather-btn');
+            const weatherResult = document.getElementById('weather-result');
+
+            getWeatherBtn.addEventListener('click', async () => {
+                const location = locationInput.value.trim();
+                if (!location) return;
+                showLoader(weatherResult);
+                
+                const prompt = `Provide a 5-day weather forecast for ${location}, Rajasthan. Respond ONLY with a JSON object in this exact format: { "forecast": [ { "day": "Monday", "temp_c": "30", "condition": "Sunny" } ] }.`;
+                const payload = {
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: { responseMimeType: "application/json" }
+                };
+
+                try {
+                    const responseText = await callGeminiAPI(payload);
+                    const data = JSON.parse(responseText.replace(/```json|```/g, ''));
+                    weatherResult.innerHTML = '';
+                    data.forecast.forEach(day => {
+                        weatherResult.innerHTML += `<div class="flex justify-between items-center p-2 bg-gray-100 rounded"><span>${day.day}</span><span>${day.temp_c}°C</span><span>${day.condition}</span></div>`;
+                    });
+                } catch (error) {
+                    console.error("Failed to parse weather data:", error);
+                    weatherResult.innerHTML = `<p class="text-red-500">Could not retrieve forecast. Please check the location and try again.</p>`;
+                }
+            });
+
+            // --- CROP STRATEGY ---
+            const getStrategyBtn = document.getElementById('get-strategy-btn');
+            const strategyResult = document.getElementById('strategy-result');
+
+            getStrategyBtn.addEventListener('click', async () => {
+                const location = document.getElementById('strategy-location-input').value.trim();
+                const soil = document.getElementById('strategy-soil-input').value;
+                if (!location) {
+                    alert("Please enter a location.");
+                    return;
+                }
+                showLoader(strategyResult);
+
+                const prompt = `You are an expert agricultural consultant specializing in the climate and economy of Rajasthan, India. A farmer from ${location}, Rajasthan with ${soil} soil wants profitable crop recommendations. Based on current market prices, climate suitability, and water requirements for that region, suggest the top 3 most profitable crops. For each crop, provide the following details: 'cropName', 'reasoning' (a short paragraph), 'estimatedProfitPerAcre' (in INR), and 'majorRisks' (as an array of strings). Respond ONLY with a JSON object in this exact format: { "recommendations": [ { "cropName": "Crop A", "reasoning": "...", "estimatedProfitPerAcre": "₹XX,XXX", "majorRisks": ["Risk 1", "Risk 2"] } ] }.`;
+                const payload = {
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: { responseMimeType: "application/json" }
+                };
+
+                try {
+                    const responseText = await callGeminiAPI(payload);
+                    const data = JSON.parse(responseText.replace(/```json|```/g, ''));
+                    strategyResult.innerHTML = '';
+                    data.recommendations.forEach(rec => {
+                        const risks = rec.majorRisks.map(risk => `<li class="text-sm">${risk}</li>`).join('');
+                        strategyResult.innerHTML += `
+                            <div class="bg-gray-50 p-4 rounded-lg mb-4 border">
+                                <h4 class="font-bold text-lg text-green-700">${rec.cropName}</h4>
+                                <p class="text-gray-600 my-2">${rec.reasoning}</p>
+                                <div class="flex justify-between items-center mt-2 text-sm">
+                                    <div><strong>Est. Profit/Acre:</strong> <span class="font-semibold text-green-600">${rec.estimatedProfitPerAcre}</span></div>
+                                    <div><strong>Major Risks:</strong> <ul class="list-disc list-inside">${risks}</ul></div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } catch (error) {
+                    console.error("Failed to parse strategy data:", error);
+                    strategyResult.innerHTML = `<p class="text-red-500">Could not retrieve recommendations. Please try again.</p>`;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
