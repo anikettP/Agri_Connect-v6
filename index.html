@@ -274,7 +274,7 @@
                 <div class="max-w-xl mx-auto bg-gray-50 p-8 rounded-2xl shadow-lg">
                     <!-- Added user's email reference -->
                     <p class="text-sm text-gray-600 mb-6 text-center">
-                        For direct support, please email: <span class="font-semibold text-emerald-600">aniketpateljnv@gmai.com.com</span>
+                        For direct support, please email: <span class="font-semibold text-emerald-600">aniketpateljnv@example.com</span>
                     </p>
                     <form action="#" method="POST" class="space-y-6">
                         <div>
@@ -379,7 +379,7 @@
         </div>
     </div>
 
-    <!-- Weather Forecast Modal -->
+    <!-- Weather Forecast Modal (Updated HTML Structure) -->
     <div id="weather-modal" class="modal-backdrop">
         <div class="bg-white rounded-lg shadow-2xl w-full max-w-lg m-4 modal-content">
             <header class="p-4 border-b flex justify-between items-center">
@@ -391,9 +391,14 @@
                     <input type="text" id="location-input" class="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="Enter your city/district...">
                     <button id="get-weather-btn" class="bg-emerald-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-emerald-700" data-lang="get_weather_btn">Get</button>
                 </div>
-                <div id="weather-result" class="space-y-2">
-                    <p class="text-gray-500 text-center">Enter a location (e.g., Jaipur, Jodhpur) and click 'Get' for a 5-day forecast.</p>
+                <!-- Updated Structure for impressive display -->
+                <div id="weather-result" class="space-y-4">
+                    <div id="current-weather" class="text-center p-4 bg-emerald-50 rounded-xl shadow-inner hidden"></div>
+                    <div id="forecast-container" class="space-y-2">
+                        <p class="text-gray-500 text-center">Enter a location (e.g., Jaipur, Jodhpur) and click 'Get' for a 5-day forecast.</p>
+                    </div>
                 </div>
+                <!-- End Updated Structure -->
             </div>
         </div>
     </div>
@@ -1005,20 +1010,46 @@
             });
 
 
-            // --- WEATHER FORECAST (Structured JSON) ---
+            // --- WEATHER FORECAST (REAL-TIME INTEGRATION FIX) ---
             const locationInput = document.getElementById('location-input');
             const getWeatherBtn = document.getElementById('get-weather-btn');
             const weatherResult = document.getElementById('weather-result');
+            const currentWeatherDiv = document.getElementById('current-weather');
+            const forecastContainer = document.getElementById('forecast-container');
 
             getWeatherBtn.addEventListener('click', async () => {
                 const location = locationInput.value.trim();
+                
                 if (!location) {
-                    weatherResult.innerHTML = `<p class="text-red-500 text-center">Please enter a location first.</p>`;
+                    currentWeatherDiv.classList.add('hidden');
+                    forecastContainer.innerHTML = `<p class="text-red-500 text-center">Please enter a location first.</p>`;
                     return;
                 }
-                showLoader(weatherResult);
                 
-                const prompt = `Provide a 5-day weather forecast for ${location}, India. Be specific about farming conditions (e.g. 'chance of light rain'). Respond ONLY with a JSON object in this exact format: { "location": "${location}", "forecast": [ { "day": "Monday", "temp_c": "30", "condition": "Sunny" } ] }.`;
+                currentWeatherDiv.classList.add('hidden'); // Hide current info during loading
+                showLoader(forecastContainer);
+                
+                // Prompt asks for detailed structured weather data based on live search results
+                const prompt = `Provide the current weather summary and a 5-day weather forecast for ${location}, India. Focus on temperature, condition, humidity, and wind speed for farming purposes.
+
+                Respond ONLY with a JSON object in this exact format. Use the current date for Day 1.
+                
+                {
+                    "location": "${location}",
+                    "current": {
+                        "temp_c": "35",
+                        "condition": "Sunny",
+                        "humidity": "25%",
+                        "wind": "15 km/h"
+                    },
+                    "forecast": [
+                        { "day": "Day 1", "temp_high": "35", "temp_low": "20", "condition": "Sunny, low humidity" },
+                        { "day": "Day 2", "temp_high": "34", "temp_low": "19", "condition": "Clear, dry" },
+                        { "day": "Day 3", "temp_high": "33", "temp_low": "20", "condition": "Partly cloudy, chance of light showers" },
+                        { "day": "Day 4", "temp_high": "32", "temp_low": "21", "condition": "Cloudy, increased wind" },
+                        { "day": "Day 5", "temp_high": "31", "temp_low": "20", "condition": "Moderate rain expected" }
+                    ]
+                }`;
                 
                 const payload = {
                     contents: [{ parts: [{ text: prompt }] }],
@@ -1027,23 +1058,43 @@
 
                 try {
                     const responseText = await callGeminiAPI(payload, true); // Use search for real-time weather
-                    // Clean up potential markdown formatting around JSON
                     const cleanedJson = responseText.replace(/```json|```/g, '').trim(); 
                     const data = JSON.parse(cleanedJson);
                     
-                    let html = `<h4 class="font-bold text-center text-lg mb-4 text-emerald-700">Forecast for ${data.location}</h4>`;
+                    // 1. Current Weather Display (Impressive Card)
+                    currentWeatherDiv.innerHTML = `
+                        <h5 class="text-xl font-bold text-emerald-800 capitalize">${data.location}</h5>
+                        <div class="flex items-center justify-center space-x-6 mt-3">
+                            <span class="text-5xl font-extrabold text-emerald-600">${data.current.temp_c}°C</span>
+                            <div class="text-left space-y-1">
+                                <p class="font-semibold text-gray-800">${data.current.condition}</p>
+                                <p class="text-sm text-gray-600">Humidity: ${data.current.humidity}</p>
+                                <p class="text-sm text-gray-600">Wind: ${data.current.wind}</p>
+                            </div>
+                        </div>
+                    `;
+                    currentWeatherDiv.classList.remove('hidden');
+
+                    // 2. 5-Day Forecast List
+                    let forecastHtml = '<h5 class="font-bold text-lg border-b pb-2 text-gray-700">5-Day Outlook</h5><div class="space-y-2 mt-2">';
                     data.forecast.forEach(day => {
-                        html += `<div class="flex justify-between items-center p-3 bg-gray-100 rounded-lg shadow-sm">
-                                <span><strong>${day.day}</strong></span>
-                                <span>${day.temp_c}°C</span>
-                                <span class="text-gray-600">${day.condition}</span>
-                            </div>`;
+                        forecastHtml += `
+                            <div class="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm border border-gray-100 transition duration-150 hover:bg-gray-50">
+                                <span class="font-bold w-1/4">${day.day}</span>
+                                <span class="w-1/4 text-right text-emerald-600 font-semibold">${day.temp_high}° / ${day.temp_low}°C</span>
+                                <span class="w-2/4 text-sm text-gray-600 text-right">${day.condition}</span>
+                            </div>
+                        `;
                     });
-                    weatherResult.innerHTML = html;
+                    forecastHtml += '</div>';
+
+                    forecastContainer.innerHTML = forecastHtml;
+
 
                 } catch (error) {
                     console.error("Failed to parse weather data:", error);
-                    weatherResult.innerHTML = `<p class="text-red-500 text-center p-4">Could not retrieve forecast for that location. Please try a major city name.</p>`;
+                    currentWeatherDiv.classList.add('hidden');
+                    forecastContainer.innerHTML = `<p class="text-red-500 text-center p-4">Could not retrieve real-time forecast. Please ensure the location is a major city name in India and try again.</p>`;
                 }
             });
 
@@ -1351,4 +1402,3 @@
     </script>
 </body>
 </html>
-
