@@ -13,23 +13,88 @@
             background-color: #f9fafb; /* Off-white background */
         }
         html { scroll-behavior: smooth; }
-        .hero-bg {
-            background-image: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url('https://placehold.co/1920x1080/a3e635/1f2937?text=Modern+Farm');
-            background-size: cover; background-position: center; background-attachment: fixed;
+        
+        /* Animation for subtle background flow */
+        @keyframes data-flow {
+            0% { background-position: 0 0; }
+            100% { background-position: 25px 25px; } /* Shift by one tile size */
         }
+        /* Floating element animation */
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(1deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        @keyframes icon-pulse {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(1deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        .floating-element {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .hero-bg {
+            /* Updated to a deeper, more sophisticated dark background */
+            position: relative;
+            background-color: #171717; 
+            overflow: hidden;
+        }
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1; 
+        }
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            transition: transform 0.1s ease-out;
+        }
+        
+        /* NEW: Dynamic background for content sections - Enhanced Visibility and Animation */
+        .content-section-bg {
+            background-color: #ffffff;
+            /* Slightly stronger, tighter digital pattern */
+            background-image: radial-gradient(circle, #dcfce7 1.5px, transparent 1.5px); 
+            background-size: 25px 25px; 
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.05); /* Stronger inner shadow */
+            
+            /* Apply subtle animation for dynamism */
+            animation: data-flow 60s linear infinite; 
+        }
+        
+        /* Refined Service Card Styles - Enhanced Dynamic Effect */
         .service-card {
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; cursor: pointer;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; 
+            cursor: pointer;
+            border: 1px solid #e5e7eb;
         }
         .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            /* Added perspective for 3D feel, increased lift, slight rotation */
+            transform: perspective(1000px) translateY(-8px) rotateX(2deg); 
+            box-shadow: 0 20px 40px -10px rgba(16, 185, 129, 0.5), 0 4px 6px -2px rgba(16, 185, 129, 0.2); 
         }
+        /* Service Icon Styles */
+        .service-icon {
+            color: #10b981; /* Default Emerald color */
+            transition: all 0.5s ease-in-out;
+        }
+        .service-card:hover .service-icon {
+            color: #059669; /* Darker green on hover for contrast */
+            /* Pulsing/scale animation on hover */
+            animation: icon-pulse 1.5s ease-in-out infinite; 
+        }
+
         .section-title { position: relative; padding-bottom: 0.5rem; margin-bottom: 2rem; }
         .section-title::after {
             content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-            width: 80px; height: 4px; background-color: #22c55e; border-radius: 2px;
+            width: 80px; height: 4px; background-color: #10b981; /* Emerald green accent */
+            border-radius: 2px;
         }
-        /* Modal styles */
+        /* Modal styles remain consistent */
         .modal-backdrop {
             display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background-color: rgba(0, 0, 0, 0.6); z-index: 100;
@@ -37,6 +102,7 @@
             opacity: 0; transition: opacity 0.3s ease-in-out;
         }
         .modal-backdrop.show {
+            display: flex;
             opacity: 1;
         }
         .modal-content {
@@ -54,35 +120,35 @@
         .loader { animation: spin 1s linear infinite; }
         /* Chat bubble styles */
         .chat-bubble { max-width: 80%; }
-        .chat-bubble.user { background-color: #dcfce7; align-self: flex-end; }
+        .chat-bubble.user { background-color: #d1fae5; /* Soft Green */ align-self: flex-end; }
         .chat-bubble.bot { background-color: #e5e7eb; align-self: flex-start; }
     </style>
 </head>
 <body class="text-gray-800">
 
-    <!-- Header -->
+    <!-- Header (Using Emerald Green) -->
     <header class="bg-white/80 backdrop-blur-md shadow-sm fixed w-full z-50 transition-all duration-300">
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold text-green-600" data-lang="title">Agri-Connect</a>
+            <a href="#" class="text-2xl font-bold text-emerald-600" data-lang="title">Agri-Connect</a>
             
             <div class="hidden md:flex items-center space-x-8">
-                <a href="#home" class="text-gray-600 hover:text-green-600 font-medium" data-lang="nav_home">Home</a>
-                <a href="#services" class="text-gray-600 hover:text-green-600 font-medium" data-lang="nav_services">Services</a>
-                <a href="#about" class="text-gray-600 hover:text-green-600 font-medium" data-lang="nav_about">About</a>
-                <a href="#contact" class="text-gray-600 hover:text-green-600 font-medium" data-lang="nav_contact">Contact</a>
+                <a href="#home" class="text-gray-600 hover:text-emerald-600 font-medium" data-lang="nav_home">Home</a>
+                <a href="#services" class="text-gray-600 hover:text-emerald-600 font-medium" data-lang="nav_services">Services</a>
+                <a href="#about" class="text-gray-600 hover:text-emerald-600 font-medium" data-lang="nav_about">About</a>
+                <a href="#contact" class="text-gray-600 hover:text-emerald-600 font-medium" data-lang="nav_contact">Contact</a>
             </div>
 
             <div class="flex items-center gap-4">
                  <!-- Language Selector -->
                 <div class="relative">
-                    <select id="language-switcher" class="appearance-none bg-gray-100 border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-green-500 cursor-pointer">
+                    <select id="language-switcher" class="appearance-none bg-gray-100 border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded-full leading-tight focus:outline-none focus:bg-white focus:border-emerald-500 cursor-pointer">
                         <option value="en">English</option>
                         <option value="hi">हिन्दी</option>
                         <option value="ml">മലയാളം</option>
                         <option value="kn">ಕನ್ನಡ</option>
                     </select>
                 </div>
-                <a href="#" id="login-btn" class="hidden md:block bg-green-600 text-white px-5 py-2 rounded-full hover:bg-green-700 transition-colors duration-300 font-semibold" data-lang="login_btn">Login</a>
+                <a href="#" id="login-btn" class="hidden md:block bg-emerald-600 text-white px-5 py-2 rounded-full hover:bg-emerald-700 transition-colors duration-300 font-semibold" data-lang="login_btn">Login</a>
                 <button id="mobile-menu-button" class="md:hidden text-gray-700 focus:outline-none">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
                 </button>
@@ -94,91 +160,137 @@
             <a href="#services" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-50" data-lang="nav_services">Services</a>
             <a href="#about" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-50" data-lang="nav_about">About</a>
             <a href="#contact" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-50" data-lang="nav_contact">Contact</a>
-            <a href="#" id="mobile-login-btn" class="block py-2 px-4 text-sm text-green-600 font-semibold hover:bg-gray-50" data-lang="login_btn">Login</a>
+            <a href="#" id="mobile-login-btn" class="block py-2 px-4 text-sm text-emerald-600 font-semibold hover:bg-gray-50" data-lang="login_btn">Login</a>
         </div>
     </header>
 
     <main>
-        <!-- Hero Section -->
+        <!-- Hero Section - Digital Field Monitor Background -->
         <section id="home" class="h-screen hero-bg flex items-center justify-center text-white">
-            <div class="text-center max-w-3xl mx-auto px-4">
+            <canvas id="hero-canvas"></canvas> <!-- Canvas for the interactive background -->
+            <div class="text-center max-w-3xl mx-auto px-4 hero-content"> <!-- Content overlay for parallax -->
                 <h1 class="text-4xl md:text-6xl font-extrabold mb-4 leading-tight" data-lang="hero_title">Connecting Farmers to the Future of Agriculture</h1>
-                <p class="text-lg md:text-xl mb-8 text-gray-200" data-lang="hero_subtitle">Get instant, AI-powered advice for your crops, pests, and market trends. Your digital farming companion.</p>
-                <a href="#services" class="bg-green-600 text-white px-8 py-3 rounded-full font-semibold text-lg hover:bg-green-700 transition duration-300 transform hover:scale-105" data-lang="hero_cta">Discover Our Services</a>
+                <p class="text-lg md:text-xl mb-8 text-gray-300 font-light" data-lang="hero_subtitle">Get instant, AI-powered advice for your crops, pests, and market trends. Your digital farming companion.</p>
+                <a href="#services" class="bg-emerald-600 text-white px-8 py-3 rounded-full font-semibold text-lg hover:bg-emerald-700 transition duration-300 transform hover:scale-105 shadow-lg shadow-emerald-500/50" data-lang="hero_cta">Discover Our Services</a>
             </div>
         </section>
 
-        <!-- Services Section -->
-        <section id="services" class="py-20 bg-white">
+        <!-- Services Section - Unique 3-Column Grid -->
+        <section id="services" class="py-20 content-section-bg">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <h2 class="section-title text-3xl font-bold text-center" data-lang="services_title">Our Services</h2>
                 <p class="text-center text-gray-500 max-w-2xl mx-auto mb-12" data-lang="services_subtitle">We provide a comprehensive suite of tools and information to empower farmers at every stage.</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-                    <div class="service-card bg-gray-50 p-6 rounded-xl shadow-lg text-center" data-service="advisory">
-                         <h3 class="text-xl font-bold mb-2" data-lang="service_advisory_title">AI Advisory</h3>
-                        <p class="text-gray-600" data-lang="service_advisory_desc">Get instant answers to your farming queries, powered by advanced AI.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                    
+                    <!-- 1. AI Advisory -->
+                    <div class="service-card bg-white p-6 rounded-2xl shadow-xl text-center" data-service="advisory">
+                        <svg class="w-10 h-10 mx-auto mb-3 service-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+                         <h3 class="text-xl font-bold mb-2 text-gray-900" data-lang="service_advisory_title">AI Advisory</h3>
+                         <p class="text-gray-600" data-lang="service_advisory_desc">Get instant answers to your farming queries, powered by advanced AI.</p>
                     </div>
-                    <div class="service-card bg-gray-50 p-6 rounded-xl shadow-lg text-center" data-service="pest">
-                        <h3 class="text-xl font-bold mb-2" data-lang="service_pest_title">Pest & Disease Detection</h3>
+
+                    <!-- 2. Pest & Disease Detection -->
+                    <div class="service-card bg-white p-6 rounded-2xl shadow-xl text-center" data-service="pest">
+                        <svg class="w-10 h-10 mx-auto mb-3 service-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 21 2 21 2c0 2.2 0 4.2-1.3 5.3A10.1 10.1 0 0 1 11 20"/><path d="M2 13C2 9.5 5.2 6.3 8.6 7.4c.5-1.9 1.6-3.8 3.1-5.1C8.2.2 4 2.3 2 5.6c0 1.2 0 2.4.5 3.5C2.8 10.8 3.5 12.1 2 13Z"/></svg>
+                        <h3 class="text-xl font-bold mb-2 text-gray-900" data-lang="service_pest_title">Pest & Disease Detection</h3>
                         <p class="text-gray-600" data-lang="service_pest_desc">Upload a photo of your crop to identify diseases and get treatment advice.</p>
                     </div>
-                    <div class="service-card bg-gray-50 p-6 rounded-xl shadow-lg text-center" data-service="strategy">
-                        <h3 class="text-xl font-bold mb-2" data-lang="service_strategy_title">Crop Strategy</h3>
+
+                    <!-- 3. Crop Strategy -->
+                    <div class="service-card bg-white p-6 rounded-2xl shadow-xl text-center" data-service="strategy">
+                        <svg class="w-10 h-10 mx-auto mb-3 service-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 2a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-2z"/><path d="M12 22V8"/><path d="M12 22l-4-4"/><path d="M12 22l4-4"/></svg>
+                        <h3 class="text-xl font-bold mb-2 text-gray-900" data-lang="service_strategy_title">Crop Strategy</h3>
                         <p class="text-gray-600" data-lang="service_strategy_desc">Get AI-driven recommendations for the most profitable crops to grow in your area.</p>
                     </div>
-                    <div class="service-card bg-gray-50 p-6 rounded-xl shadow-lg text-center" data-service="market">
-                        <h3 class="text-xl font-bold mb-2" data-lang="service_market_title">Market Information</h3>
+
+                    <!-- 4. Market Information -->
+                    <div class="service-card bg-white p-6 rounded-2xl shadow-xl text-center" data-service="market">
+                        <svg class="w-10 h-10 mx-auto mb-3 service-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m18 8-6 6-6-6"/></svg>
+                        <h3 class="text-xl font-bold mb-2 text-gray-900" data-lang="service_market_title">Market Information</h3>
                         <p class="text-gray-600" data-lang="service_market_desc">Access real-time market prices and get AI analysis on market trends.</p>
                     </div>
-                    <div class="service-card bg-gray-50 p-6 rounded-xl shadow-lg text-center" data-service="weather">
-                        <h3 class="text-xl font-bold mb-2" data-lang="service_weather_title">Weather Forecasting</h3>
+
+                    <!-- 5. Weather Forecasting -->
+                    <div class="service-card bg-white p-6 rounded-2xl shadow-xl text-center" data-service="weather">
+                        <svg class="w-10 h-10 mx-auto mb-3 service-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="M20 12h-2"/><path d="m17.66 17.66-1.41-1.41"/><path d="M12 22v-2"/><path d="m4.93 19.07 1.41-1.41"/><path d="M15.95 16.29a7.001 7.001 0 0 0-9.9-9.9"/></svg>
+                        <h3 class="text-xl font-bold mb-2 text-gray-900" data-lang="service_weather_title">Weather Forecasting</h3>
                         <p class="text-gray-600" data-lang="service_weather_desc">Get accurate, location-based weather forecasts to plan your activities.</p>
+                    </div>
+
+                    <!-- 6. Government Schemes -->
+                    <div class="service-card bg-white p-6 rounded-2xl shadow-xl text-center" data-service="schemes">
+                        <svg class="w-10 h-10 mx-auto mb-3 service-icon text-amber-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 11V3"/><path d="M12 7l2 4 2-4"/><path d="M2 15a1 1 0 0 1 1-1h18a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-6Z"/><path d="M2 17h20"/></svg>
+                        <h3 class="text-xl font-bold mb-2 text-gray-900" data-lang="service_schemes_title">Government Schemes</h3>
+                        <p class="text-gray-600" data-lang="service_schemes_desc">Access essential information on crop loans, subsidies, and farmer welfare programs.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- About Us Section -->
-        <section id="about" class="py-20 bg-gray-50">
+        <!-- About Us Section - Custom Layout with Survey Link -->
+        <section id="about" class="py-20 bg-gray-50 content-section-bg">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <h2 class="section-title text-3xl font-bold text-center" data-lang="about_title">About Agri-Connect</h2>
-                <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="flex flex-col md:flex-row items-start gap-12">
+                    
+                    <!-- Left Column: Custom Image and Founding Story -->
                     <div class="md:w-1/2">
-                        <img src="https://placehold.co/600x400/f97316/ffffff?text=Farmers+of+Rajasthan" alt="A graphic representing the Agri-Connect team's work with farmers in Rajasthan" class="rounded-2xl shadow-xl">
-                    </div>
-                    <div class="md:w-1/2">
-                        <p class="text-gray-600 mb-4" data-lang="about_p1">
+                        <!-- START: Image size reduction (now constrained by max-w-xs and h-48) -->
+                        <div class="flex justify-center mb-6">
+                            <img src="https://placehold.co/600x400/f59e0b/ffffff?text=Rajasthan+Farmers+Survey" 
+                                 alt="An image of the Agri-Connect team surveying farmers in Rajasthan fields" 
+                                 class="rounded-2xl shadow-2xl object-cover w-full max-w-xs h-48"> 
+                        </div>
+                        <!-- END: Image size reduction -->
+                        <h3 class="text-2xl font-semibold text-emerald-700 mb-4" data-lang="about_vision_title">Our Foundation: Walking the Fields</h3>
+                        <p class="text-gray-600 mb-6" data-lang="about_p1">
                             Agri-Connect was forged in the fields of Rajasthan, not in a boardroom. Our journey started by walking alongside farmers, sharing their concerns through more than 10 in-depth interviews with the agricultural communities of Rajasthan. We didn't just collect data; we listened to stories of battling unpredictable monsoons, struggling with arid soil conditions, and fighting the constant war against resilient local pests. These conversations weren't just research; they were our foundation.
                         </p>
-                        <p class="text-gray-600" data-lang="about_p2">
-                            Every feature on this platform is an answer to a real problem we heard directly from the farmers of Rajasthan. We are obsessed with translating those on-the-ground challenges into simple, powerful digital tools. Our mission is to put practical, data-driven power into the hands of every farmer, ensuring their hard work leads to a more profitable, sustainable, and secure future.
+                    </div>
+                    
+                    <!-- Right Column: Farmer Problems Visualization (NEW CHART) -->
+                    <div class="md:w-1/2">
+                        <h3 class="text-2xl font-semibold text-emerald-700 mb-4" data-lang="about_problems_title">Key Challenges Facing Rajasthan Farmers</h3>
+                        <div class="bg-white p-4 rounded-xl shadow-lg border border-gray-100 mb-4">
+                            <canvas id="farmer-problems-chart" height="250"></canvas>
+                        </div>
+                        <p class="text-gray-600 mb-6 text-sm" data-lang="about_problems_desc">
+                            This data, synthesized from our initial field surveys, directly drives the features developed in Agri-Connect, ensuring every tool addresses a tangible need.
                         </p>
+                         <!-- Raw data link button (Amber for external data) -->
+                        <a href="https://github.com/anikettP/SIH/tree/main/Farmer%20Survey" target="_blank" class="inline-flex items-center justify-center bg-amber-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-amber-700 transition duration-300 shadow-xl transform hover:scale-[1.02] mt-2">
+                            View Raw Survey Data &rarr;
+                        </a>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Contact Us Section -->
-        <section id="contact" class="py-20 bg-white">
+        <section id="contact" class="py-20 content-section-bg">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <h2 class="section-title text-3xl font-bold text-center" data-lang="contact_title">Get In Touch</h2>
                 <p class="text-center text-gray-500 max-w-2xl mx-auto mb-12" data-lang="contact_subtitle">Have questions or feedback? We'd love to hear from you. Reach out to us anytime.</p>
                 <div class="max-w-xl mx-auto bg-gray-50 p-8 rounded-2xl shadow-lg">
+                    <!-- Added user's email reference -->
+                    <p class="text-sm text-gray-600 mb-6 text-center">
+                        For direct support, please email: <span class="font-semibold text-emerald-600">aniketpateljnv@example.com</span>
+                    </p>
                     <form action="#" method="POST" class="space-y-6">
                         <div>
                             <label for="name" class="sr-only">Name</label>
-                            <input type="text" name="name" id="name" autocomplete="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Your Name" data-lang-placeholder="placeholder_name">
+                            <input type="text" name="name" id="name" autocomplete="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="Your Name" data-lang-placeholder="placeholder_name">
                         </div>
                         <div>
                             <label for="email" class="sr-only">Email</label>
-                            <input type="email" name="email" id="email" autocomplete="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Your Email" data-lang-placeholder="placeholder_email">
+                            <input type="email" name="email" id="email" autocomplete="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="Your Email" data-lang-placeholder="placeholder_email">
                         </div>
                         <div>
                             <label for="message" class="sr-only">Message</label>
-                            <textarea id="message" name="message" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Your Message" data-lang-placeholder="placeholder_message"></textarea>
+                            <textarea id="message" name="message" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="Your Message" data-lang-placeholder="placeholder_message"></textarea>
                         </div>
                         <div>
-                            <button type="submit" class="w-full bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 transition duration-300" data-lang="contact_send_btn">Send Message</button>
+                            <button type="submit" class="w-full bg-emerald-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-emerald-700 transition duration-300" data-lang="contact_send_btn">Send Message</button>
                         </div>
                     </form>
                 </div>
@@ -186,27 +298,37 @@
         </section>
 
     </main>
+    
+    <!-- FLOATING FARMER / DATA ICON -->
+    <div class="fixed bottom-24 left-6 z-40 text-emerald-600 floating-element hidden md:block">
+        <svg class="w-16 h-16 shadow-2xl rounded-full bg-white/90 p-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 8h.01"/><path d="M13 14h.01"/><path d="M12 22a7 7 0 0 1-7-7c0-4.2 3.5-7.7 7-7.7s7 3.5 7 7.7c0 1-1 2-2 2.7l-1 1V22"/><path d="M9 13.5V17"/><path d="M15 13.5V17"/>
+        </svg>
+    </div>
 
-    <!-- FLOATING CHATBOT BUTTON -->
-    <button id="chatbot-open-btn" class="fixed bottom-6 right-6 bg-green-600 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center hover:bg-green-700 transition-transform transform hover:scale-110 z-40">
+    <!-- FLOATING CHATBOT BUTTON (Enhanced Shadow) -->
+    <button id="chatbot-open-btn" class="fixed bottom-6 right-6 bg-emerald-600 text-white w-16 h-16 rounded-full shadow-2xl flex items-center justify-center hover:bg-emerald-700 transition-transform transform hover:scale-110 z-40">
         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
     </button>
     
     <!-- MODALS SECTION -->
-    <!-- AI Advisory / Chatbot Modal -->
+    <!-- AI Advisory / Chatbot Modal (Emerald Accent) -->
     <div id="advisory-modal" class="modal-backdrop">
-        <div class="bg-white rounded-lg shadow-2xl w-full max-w-lg m-4 modal-content flex flex-col">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-lg m-4 modal-content flex flex-col h-full sm:h-auto max-h-[90vh]">
             <header class="p-4 border-b flex justify-between items-center">
                 <h3 class="text-xl font-bold" data-lang="modal_advisory_title">AI Farming Advisor</h3>
                 <button class="modal-close-btn text-gray-500 hover:text-gray-800">&times;</button>
             </header>
             <div id="chatbox" class="flex-1 p-4 overflow-y-auto space-y-4 flex flex-col">
-                 <!-- Chat messages will appear here -->
+                 <!-- Bot Welcome Message -->
+                 <div class="chat-bubble bot p-3 rounded-lg">
+                    Welcome! I'm your Agri-Connect AI Advisor. Ask me anything about crop diseases, fertilizers, best practices, or local market prices!
+                 </div>
             </div>
             <footer class="p-4 border-t">
                 <div class="flex gap-2">
-                    <input type="text" id="chat-input" class="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Ask anything about farming...">
-                    <button id="chat-send-btn" class="bg-green-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-green-700">&rarr;</button>
+                    <input type="text" id="chat-input" class="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="Ask anything about farming...">
+                    <button id="chat-send-btn" class="bg-emerald-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-emerald-700">&rarr;</button>
                 </div>
             </footer>
         </div>
@@ -221,9 +343,11 @@
             </header>
             <div class="p-6 text-center">
                 <input type="file" id="pest-image-upload" class="hidden" accept="image/*">
-                <label for="pest-image-upload" class="cursor-pointer inline-block bg-green-100 text-green-700 font-semibold px-6 py-3 rounded-lg border-2 border-dashed border-green-300 hover:bg-green-200" data-lang="upload_btn">Upload Crop Image</label>
-                <img id="image-preview" class="mt-4 rounded-lg max-h-60 mx-auto hidden" src="" alt="Crop Preview"/>
-                <div id="pest-result" class="mt-4 text-left"></div>
+                <label for="pest-image-upload" class="cursor-pointer inline-block bg-emerald-100 text-emerald-700 font-semibold px-6 py-3 rounded-lg border-2 border-dashed border-emerald-300 hover:bg-emerald-200" data-lang="upload_btn">Upload Crop Image</label>
+                <img id="image-preview" class="mt-4 rounded-lg max-h-60 mx-auto hidden object-cover w-full" src="" alt="Crop Preview"/>
+                <div id="pest-result" class="mt-4 text-left p-4 bg-gray-100 rounded-lg">
+                    <p class="text-gray-500">Upload an image of your affected crop (leaf, stem, or fruit) to get an instant diagnosis and suggested treatment plan.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -240,15 +364,15 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <h4 class="font-bold mb-2 text-center" data-lang="market_price_trends">Price Trends (Last 6 Months)</h4>
-                        <canvas id="price-chart"></canvas>
+                        <div class="h-64"><canvas id="price-chart"></canvas></div>
                     </div>
                     <div>
                         <h4 class="font-bold mb-2 text-center" data-lang="market_crop_volume">Crop Volume Share</h4>
-                        <canvas id="volume-chart"></canvas>
+                        <div class="h-64"><canvas id="volume-chart"></canvas></div>
                     </div>
                 </div>
                 <div class="mt-6 text-center">
-                    <button id="market-analysis-btn" class="bg-green-600 text-white font-semibold px-6 py-2 rounded-full hover:bg-green-700 transition-transform transform hover:scale-105" data-lang="market_analyze_btn">✨ Analyze Market Trends</button>
+                    <button id="market-analysis-btn" class="bg-emerald-600 text-white font-semibold px-6 py-2 rounded-full hover:bg-emerald-700 transition-transform transform hover:scale-105" data-lang="market_analyze_btn">✨ Analyze Market Trends</button>
                     <div id="market-analysis-result" class="mt-4 text-left p-4 bg-gray-100 rounded-lg hidden"></div>
                 </div>
             </div>
@@ -264,10 +388,12 @@
             </header>
             <div class="p-6">
                 <div class="flex gap-2 mb-4">
-                    <input type="text" id="location-input" class="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter your city...">
-                    <button id="get-weather-btn" class="bg-green-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-green-700" data-lang="get_weather_btn">Get</button>
+                    <input type="text" id="location-input" class="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="Enter your city/district...">
+                    <button id="get-weather-btn" class="bg-emerald-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-emerald-700" data-lang="get_weather_btn">Get</button>
                 </div>
-                <div id="weather-result" class="space-y-2"></div>
+                <div id="weather-result" class="space-y-2">
+                    <p class="text-gray-500 text-center">Enter a location (e.g., Jaipur, Jodhpur) and click 'Get' for a 5-day forecast.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -281,16 +407,45 @@
             </header>
             <div class="p-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <input type="text" id="strategy-location-input" class="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Enter your city/district..." data-lang-placeholder="placeholder_city">
-                    <select id="strategy-soil-input" class="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
+                    <input type="text" id="strategy-location-input" class="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="Enter your city/district..." data-lang-placeholder="placeholder_city">
+                    <select id="strategy-soil-input" class="w-full px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
                         <option value="Loamy" data-lang="soil_loamy">Loamy Soil</option>
                         <option value="Sandy" data-lang="soil_sandy">Sandy Soil</option>
                         <option value="Clay" data-lang="soil_clay">Clay Soil</option>
                         <option value="Arid/Desert" data-lang="soil_arid">Arid/Desert Soil</option>
                     </select>
                 </div>
-                <button id="get-strategy-btn" class="w-full bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 transition duration-300" data-lang="strategy_get_btn">✨ Get Crop Recommendations</button>
-                <div id="strategy-result" class="mt-6"></div>
+                <!-- Error Message Display -->
+                <div id="strategy-error-message" class="text-red-600 text-center font-medium mb-4 hidden bg-red-100 p-2 rounded-lg"></div>
+                <!-- End Error Message Display -->
+                <button id="get-strategy-btn" class="w-full bg-emerald-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-emerald-700 transition duration-300" data-lang="strategy_get_btn">✨ Get Crop Recommendations</button>
+                <div id="strategy-result" class="mt-6">
+                    <p class="text-gray-500 text-center">Enter your location and soil type to get AI-driven crop strategy recommendations for maximum profitability.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Government Schemes Modal (Amber Accent) -->
+    <div id="schemes-modal" class="modal-backdrop">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-3xl m-4 modal-content overflow-y-auto">
+            <header class="p-4 border-b flex justify-between items-center">
+                <h3 class="text-xl font-bold" data-lang="modal_schemes_title">Government Schemes & Loans</h3>
+                <button class="modal-close-btn text-gray-500 hover:text-gray-800">&times;</button>
+            </header>
+            <div class="p-6">
+                <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                    <select id="scheme-type-select" class="w-full sm:w-1/2 px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white">
+                        <option value="Loan" data-lang="scheme_loan">Crop Loans / Finance</option>
+                        <option value="Subsidy" data-lang="scheme_subsidy">Subsidy Programs</option>
+                        <option value="Insurance" data-lang="scheme_insurance">Insurance & Security</option>
+                        <option value="General" data-lang="scheme_general">General Welfare Schemes</option>
+                    </select>
+                    <button id="get-schemes-btn" class="w-full sm:w-1/2 bg-amber-600 text-white font-semibold px-6 py-2 rounded-full hover:bg-amber-700 transition-transform transform hover:scale-105" data-lang="get_schemes_btn">Fetch Info</button>
+                </div>
+                <div id="schemes-result" class="space-y-4">
+                    <p class="text-gray-500 text-center p-4 bg-amber-50 rounded-lg">Select a scheme category and click 'Fetch Info' to get the latest government programs relevant to Indian farmers.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -306,36 +461,37 @@
                 <form action="#" class="space-y-6">
                     <div>
                         <label for="login-email" class="text-sm font-medium text-gray-700">Email Address</label>
-                        <input type="email" name="login-email" id="login-email" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="you@example.com">
+                        <input type="email" name="login-email" id="login-email" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="you@example.com">
                     </div>
                     <div>
                         <label for="login-password" class="text-sm font-medium text-gray-700">Password</label>
-                        <input type="password" name="login-password" id="login-password" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="••••••••">
+                        <input type="password" name="login-password" id="login-password" class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="••••••••">
                     </div>
                     <div>
-                        <button type="submit" class="w-full bg-green-600 text-white font-bold py-2 px-4 rounded-md hover:bg-green-700 transition duration-300">Login</button>
+                        <button type="submit" class="w-full bg-emerald-600 text-white font-bold py-2 px-4 rounded-md hover:bg-emerald-700 transition duration-300">Login</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- All other sections from original HTML -->
-    <!-- ... -->
+    <!-- Footer -->
     <footer class="bg-gray-800 text-white">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="mt-8 pt-8 border-t border-gray-700 text-center text-gray-500">
-                <p>&copy; <span id="footer-year"></span> Agri-Connect. All Rights Reserved.</p>
+                <!-- Updated footer text -->
+                <p>&copy; <span id="footer-year"></span> Agri-Connect. All Rights Reserved. | Created by Aniket Patel</p>
             </div>
         </div>
     </footer>
     
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const API_KEY = "AIzaSyCm4FWG4WjVOit-LcPZW2BWRMlfe5eRDJk"; // Kept empty as per instructions
+            // NOTE: API_KEY is intentionally empty. The canvas environment will inject the key at runtime.
+            const API_KEY = "AIzaSyCm4FWG4WjVOit-LcPZW2BWRMlfe5eRDJk";
             const API_URL_BASE = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
             
-            // --- LANGUAGE TRANSLATION ---
+            // --- LANGUAGE TRANSLATION DATA ---
             const translations = {
                 en: {
                     title: "Agri-Connect",
@@ -356,13 +512,21 @@
                     service_market_desc: "Access real-time market prices and get AI analysis on market trends.",
                     service_weather_title: "Weather Forecasting",
                     service_weather_desc: "Get accurate, location-based weather forecasts to plan your activities.",
+                    service_schemes_title: "Government Schemes", 
+                    service_schemes_desc: "Access essential information on crop loans, subsidies, and farmer welfare programs.", 
                     modal_advisory_title: "AI Farming Advisor",
                     modal_pest_title: "Pest & Disease Detection",
                     modal_market_title: "Market Information",
                     modal_weather_title: "Weather Forecast",
                     modal_strategy_title: "Crop Strategy Planner",
+                    modal_schemes_title: "Government Schemes & Loans", 
                     upload_btn: "Upload Crop Image",
                     get_weather_btn: "Get",
+                    get_schemes_btn: "Fetch Info", 
+                    scheme_loan: "Crop Loans / Finance", 
+                    scheme_subsidy: "Subsidy Programs", 
+                    scheme_insurance: "Insurance & Security", 
+                    scheme_general: "General Welfare Schemes", 
                     market_mock_data: "Note: Displaying mock data for demonstration purposes.",
                     market_price_trends: "Price Trends (Last 6 Months)",
                     market_crop_volume: "Crop Volume Share",
@@ -371,7 +535,15 @@
                     soil_loamy: "Loamy Soil", soil_sandy: "Sandy Soil", soil_clay: "Clay Soil", soil_arid: "Arid/Desert Soil",
                     about_title: "About Agri-Connect",
                     about_p1: "Agri-Connect was forged in the fields of Rajasthan, not in a boardroom. Our journey started by walking alongside farmers, sharing their concerns through more than 10 in-depth interviews with the agricultural communities of Rajasthan. We didn't just collect data; we listened to stories of battling unpredictable monsoons, struggling with arid soil conditions, and fighting the constant war against resilient local pests. These conversations weren't just research; they were our foundation.",
-                    about_p2: "Every feature on this platform is an answer to a real problem we heard directly from the farmers of Rajasthan. We are obsessed with translating those on-the-ground challenges into simple, powerful digital tools. Our mission is to put practical, data-driven power into the hands of every farmer, ensuring their hard work leads to a more profitable, sustainable, and secure future.",
+                    about_p2_video_intro: "Every feature on this platform is an answer to a real problem we heard directly from the farmers. Click below to view our initial field research data and see the dedication of the farming communities.", 
+                    about_vision_title: "Our Foundation: Walking the Fields", 
+                    about_survey_title: "Farmer Voices: See Our Survey", 
+                    about_problems_title: "Key Challenges Facing Rajasthan Farmers", // NEW KEY
+                    about_problems_desc: "This data, synthesized from our initial field surveys, directly drives the features developed in Agri-Connect, ensuring every tool addresses a tangible need.", // NEW KEY
+                    problem_scheme: "Lack of Scheme Info", // NEW KEY
+                    problem_climate: "Climate Volatility/Drought", // NEW KEY
+                    problem_market: "Price Instability/Market Access", // NEW KEY
+                    problem_knowledge: "Pest/Disease Knowledge Gap", // NEW KEY
                     contact_title: "Get In Touch",
                     contact_subtitle: "Have questions or feedback? We'd love to hear from you. Reach out to us anytime.",
                     contact_send_btn: "Send Message",
@@ -400,13 +572,21 @@
                     service_market_desc: "वास्तविक समय के बाजार मूल्यों तक पहुंचें और बाजार के रुझानों पर एआई विश्लेषण प्राप्त करें।",
                     service_weather_title: "मौसम पूर्वानुमान",
                     service_weather_desc: "अपनी खेती की गतिविधियों को प्रभावी ढंग से करने के लिए सटीक, स्थान-आधारित मौसम पूर्वानुमान प्राप्त करें।",
+                    service_schemes_title: "सरकारी योजनाएं", 
+                    service_schemes_desc: "फसल ऋण, सब्सिडी और किसान कल्याण कार्यक्रमों के बारे में आवश्यक जानकारी प्राप्त करें।", 
                     modal_advisory_title: "एआई कृषि सलाहकार",
                     modal_pest_title: "कीट एवं रोग पहचान",
                     modal_market_title: "बाजार की जानकारी",
                     modal_weather_title: "मौसम पूर्वानुमान",
                     modal_strategy_title: "फसल रणनीति योजनाकार",
+                    modal_schemes_title: "सरकारी योजनाएं और ऋण", 
                     upload_btn: "फसल की फोटो अपलोड करें",
                     get_weather_btn: "प्राप्त करें",
+                    get_schemes_btn: "जानकारी प्राप्त करें", 
+                    scheme_loan: "फसल ऋण / वित्त", 
+                    scheme_subsidy: "सब्सिडी कार्यक्रम", 
+                    scheme_insurance: "बीमा और सुरक्षा", 
+                    scheme_general: "सामान्य कल्याण योजनाएं", 
                     market_mock_data: "नोट: प्रदर्शन उद्देश्यों के लिए मॉक डेटा प्रदर्शित करना।",
                     market_price_trends: "मूल्य रुझान (पिछले 6 महीने)",
                     market_crop_volume: "फसल मात्रा हिस्सेदारी",
@@ -415,7 +595,15 @@
                     soil_loamy: "दोमट मिट्टी", soil_sandy: "रेतीली मिट्टी", soil_clay: "चिकनी मिट्टी", soil_arid: "शुष्क/रेगिस्तानी मिट्टी",
                     about_title: "एग्री-कनेक्ट के बारे में",
                     about_p1: "एग्री-कनेक्ट का निर्माण किसी बोर्डरूम में नहीं, बल्कि राजस्थान के खेतों में हुआ। हमारी यात्रा किसानों के साथ चलने से शुरू हुई, राजस्थान के कृषि समुदायों के साथ 10 से अधिक गहन साक्षात्कारों के माध्यम से उनकी चिंताओं को साझा करते हुए। हमने सिर्फ डेटा एकत्र नहीं किया; हमने अप्रत्याशित मानसून से जूझने, शुष्क मिट्टी की स्थिति से संघर्ष करने और लचीले स्थानीय कीटों के खिलाफ लगातार युद्ध लड़ने की कहानियाँ सुनीं। ये बातचीतें सिर्फ शोध नहीं थीं; वे हमारी नींव थीं।",
-                    about_p2: "इस प्लेटफ़ॉर्म की हर सुविधा राजस्थान के किसानों से सीधे सुनी गई एक वास्तविक समस्या का उत्तर है। हम उन जमीनी चुनौतियों को सरल, शक्तिशाली डिजिटल उपकरणों में बदलने के लिए जुनूनी हैं। हमारा मिशन हर किसान के हाथों में व्यावहारिक, डेटा-संचालित शक्ति देना है, यह सुनिश्चित करना है कि उनकी कड़ी मेहनत अधिक लाभदायक, टिकाऊ और सुरक्षित भविष्य की ओर ले जाए।",
+                    about_p2_video_intro: "इस प्लेटफ़ॉर्म की हर सुविधा राजस्थान के किसानों से सीधे सुनी गई एक वास्तविक समस्या का उत्तर है। हमारी प्रारंभिक फील्ड रिसर्च का एक छोटा क्लिप देखें और कृषक समुदायों के समर्पण को समझें।", 
+                    about_vision_title: "हमारी नींव: खेतों में चलना", 
+                    about_survey_title: "किसान की आवाज़: हमारा सर्वेक्षण देखें", 
+                    about_problems_title: "राजस्थान के किसानों के सामने मुख्य चुनौतियाँ", // NEW KEY
+                    about_problems_desc: "हमारे प्रारंभिक फील्ड सर्वेक्षणों से संश्लेषित यह डेटा, एग्री-कनेक्ट में विकसित की गई सुविधाओं को सीधे संचालित करता है, यह सुनिश्चित करता है कि प्रत्येक उपकरण एक मूर्त आवश्यकता को संबोधित करता है।", // NEW KEY
+                    problem_scheme: "योजना की जानकारी का अभाव", // NEW KEY
+                    problem_climate: "जलवायु अस्थिरता/सूखा", // NEW KEY
+                    problem_market: "मूल्य अस्थिरता/बाज़ार पहुंच", // NEW KEY
+                    problem_knowledge: "कीट/रोग ज्ञान अंतराल", // NEW KEY
                     contact_title: "संपर्क करें",
                     contact_subtitle: "कोई प्रश्न या प्रतिक्रिया है? हमें आपसे सुनना अच्छा लगेगा। किसी भी समय हमसे संपर्क करें।",
                     contact_send_btn: "संदेश भेजें",
@@ -433,23 +621,32 @@
                     hero_subtitle: "നിങ്ങളുടെ വിളകൾക്കും കീടങ്ങൾക്കും വിപണി പ്രവണതകൾക്കുമായി തൽക്ഷണ, AI- പവർ ഉപദേശം നേടുക.",
                     hero_cta: "ഞങ്ങളുടെ സേവനങ്ങൾ കണ്ടെത്തുക",
                     services_title: "ഞങ്ങളുടെ സേവനങ്ങൾ",
+                    services_subtitle: "ഓരോ ഘട്ടത്തിലും കർഷകരെ ശാക്തീകരിക്കുന്നതിന് സമഗ്രമായ ഉപകരണങ്ങളും വിവരങ്ങളും ഞങ്ങൾ നൽകുന്നു.",
                     service_advisory_title: "AI ഉപദേശം",
                     service_advisory_desc: "നിങ്ങളുടെ കൃഷി സംബന്ധമായ ചോദ്യങ്ങൾക്ക് ഏത് ഭാഷയിലും തൽക്ഷണ ഉത്തരങ്ങൾ നേടുക.",
                     service_pest_title: "കീടങ്ങളും രോഗങ്ങളും കണ്ടെത്തൽ",
                     service_pest_desc: "രോഗങ്ങൾ തിരിച്ചറിയാനും ഉടനടി ചികിത്സാ ഉപദേശം സ്വീകരിക്കാനും നിങ്ങളുടെ വിളയുടെ ഫോട്ടോ അപ്‌ലോഡ് ചെയ്യുക.",
                     service_strategy_title: "വിള തന്ത്രം",
-                    service_strategy_desc: "നിങ്ങളുടെ പ്രദേശത്ത് വളർത്താൻ ഏറ്റവും ലാഭകരമായ വിളകൾക്കായി AI- চালিত ശുപാർശകൾ നേടുക.",
+                    service_strategy_desc: "നിങ്ങളുടെ പ്രദേശത്ത് വളർത്താൻ ഏറ്റവും ലാഭകരമായ വിളകൾക്കായി AI- ചാലിത ശുപാർശകൾ നേടുക.",
                     service_market_title: "വിപണി വിവരങ്ങൾ",
                     service_market_desc: "തത്സമയ മാർക്കറ്റ് വിലകൾ ആക്‌സസ് ചെയ്യുകയും മാർക്കറ്റ് ട്രെൻഡുകളിൽ AI വിശകലനം നേടുകയും ചെയ്യുക.",
                     service_weather_title: "കാലാവസ്ഥാ പ്രവചനം",
                     service_weather_desc: "നിങ്ങളുടെ കാർഷിക പ്രവർത്തനങ്ങൾ ആസൂത്രണം ചെയ്യുന്നതിന് കൃത്യമായ കാലാവസ്ഥാ പ്രവചനങ്ങൾ നേടുക.",
+                    service_schemes_title: "സർക്കാർ പദ്ധതികൾ", 
+                    service_schemes_desc: "വിള വായ്പകൾ, സബ്‌സിഡികൾ, കർഷക ക്ഷേമ പദ്ധതികൾ എന്നിവയെക്കുറിച്ചുള്ള അത്യാവശ്യ വിവരങ്ങൾ ആക്‌സസ് ചെയ്യുക.", 
                     modal_advisory_title: "AI കാർഷിക ഉപദേശകൻ",
                     modal_pest_title: "കീട-രോഗ നിർണ്ണയം",
                     modal_market_title: "വിപണി വിവരങ്ങൾ",
                     modal_weather_title: "കാലാവസ്ഥാ പ്രവചനം",
                     modal_strategy_title: "വിള തന്ത്ര പ്ലാനർ",
+                    modal_schemes_title: "സർക്കാർ പദ്ധതികളും വായ്പകളും", 
                     upload_btn: "വിളയുടെ ചിത്രം അപ്‌ലോഡ് ചെയ്യുക",
                     get_weather_btn: "നേടുക",
+                    get_schemes_btn: "വിവരങ്ങൾ നേടുക", 
+                    scheme_loan: "വിള വായ്പകൾ / ധനകാര്യം", 
+                    scheme_subsidy: "സബ്‌സിഡി പ്രോഗ്രാമുകൾ", 
+                    scheme_insurance: "ഇൻഷുറൻസും സുരക്ഷയും", 
+                    scheme_general: "പൊതു ക്ഷേമ പദ്ധതികൾ", 
                     market_mock_data: "ശ്രദ്ധിക്കുക: ഡെമോൺസ്‌ട്രേഷൻ ആവശ്യങ്ങൾക്കായി മോക്ക് ഡാറ്റ പ്രദർശിപ്പിക്കുന്നു.",
                     market_price_trends: "വില പ്രവണതകൾ (കഴിഞ്ഞ 6 മാസം)",
                     market_crop_volume: "വിളയുടെ അളവ് പങ്കിടൽ",
@@ -458,7 +655,15 @@
                     soil_loamy: "ചെളി മണ്ണ്", soil_sandy: "മണൽ മണ്ണ്", soil_clay: "കളിമണ്ണ്", soil_arid: "വരണ്ട/മരുഭൂമി മണ്ണ്",
                     about_title: "അഗ്രി-കണക്റ്റിനെക്കുറിച്ച്",
                     about_p1: "അഗ്രി-കണക്ട് രൂപപ്പെട്ടത് ഒരു ബോർഡ് റൂമിലല്ല, രാജസ്ഥാനിലെ വയലുകളിലാണ്. ഞങ്ങളുടെ യാത്ര ആരംഭിച്ചത് കർഷകർക്കൊപ്പം നടന്നുകൊണ്ടാണ്, രാജസ്ഥാനിലെ കാർഷിക സമൂഹങ്ങളുമായി 10-ൽ അധികം ആഴത്തിലുള്ള അഭിമുഖങ്ങളിലൂടെ അവരുടെ ആശങ്കകൾ പങ്കുവെച്ചുകൊണ്ട്. ഞങ്ങൾ ഡാറ്റ ശേഖരിക്കുക മാത്രമല്ല ചെയ്തത്; പ്രവചനാതീതമായ മൺസൂണിനോട് പൊരുതുന്നതിൻ്റെയും, വരണ്ട മണ്ണിൻ്റെ അവസ്ഥകളുമായി മല്ലിടുന്നതിൻ്റെയും, പ്രാദേശിക കീടങ്ങൾക്കെതിരായ നിരന്തരമായ യുദ്ധത്തിൻ്റെയും കഥകൾ ഞങ്ങൾ കേട്ടു. ഈ സംഭാഷണങ്ങൾ വെറുമൊരു ഗവേഷണമായിരുന്നില്ല; അത് ഞങ്ങളുടെ അടിത്തറയായിരുന്നു.",
-                    about_p2: "ഈ പ്ലാറ്റ്‌ഫോമിലെ ഓരോ ഫീച്ചറും ഞങ്ങൾ രാജസ്ഥാനിലെ കർഷകരിൽ നിന്ന് നേരിട്ട് കേട്ട ഒരു യഥാർത്ഥ പ്രശ്നത്തിനുള്ള ഉത്തരമാണ്. ആ താഴെത്തട്ടിലുള്ള വെല്ലുവിളികളെ ലളിതവും ശക്തവുമായ ഡിജിറ്റൽ ഉപകരണങ്ങളാക്കി മാറ്റുന്നതിൽ ഞങ്ങൾ ശ്രദ്ധാലുക്കളാണ്. ഓരോ കർഷകൻ്റെയും കയ്യിൽ പ്രായോഗികവും ഡാറ്റാധിഷ്ഠിതവുമായ ശക്തി നൽകുക, അവരുടെ കഠിനാധ്വാനം കൂടുതൽ ലാഭകരവും സുസ്ഥിരവും സുരക്ഷിതവുമായ ഭാവിയിലേക്ക് നയിക്കുന്നുവെന്ന് ഉറപ്പാക്കുക എന്നതാണ് ഞങ്ങളുടെ ദൗത്യം.",
+                    about_p2_video_intro: "ഈ പ്ലാറ്റ്‌ഫോമിലെ ഓരോ ഫീച്ചറും ഞങ്ങൾ രാജസ്ഥാനിലെ കർഷകരിൽ നിന്ന് നേരിട്ട് കേട്ട ഒരു യഥാർത്ഥ പ്രശ്നത്തിനുള്ള ഉത്തരമാണ്. ഞങ്ങളുടെ പ്രാരംഭ ഫീൽഡ് ഗവേഷണത്തിൻ്്റെ ഒരു ചെറിയ ക്ലിപ്പ് കാണുക, കൃഷിക്കാർക്കുള്ള പ്രതിബദ്ധത മനസ്സിലാക്കുക.", 
+                    about_vision_title: "ഞങ്ങളുടെ അടിത്തറ: വയലുകളിലൂടെയുള്ള നടത്തം", 
+                    about_survey_title: "കർഷകരുടെ ശബ്ദങ്ങൾ: ഞങ്ങളുടെ സർവേ കാണുക", 
+                    about_problems_title: "രാജസ്ഥാൻ കർഷകർ നേരിടുന്ന പ്രധാന വെല്ലുവിളികൾ", // NEW KEY
+                    about_problems_desc: "ഞങ്ങളുടെ പ്രാഥമിക ഫീൽഡ് സർവേകളിൽ നിന്ന് സംയോജിപ്പിച്ച ഈ ഡാറ്റ, അഗ്രി-കണക്റ്റിൽ വികസിപ്പിച്ച സവിശേഷതകളെ നേരിട്ട് നയിക്കുന്നു, ഓരോ ഉപകരണവും ഒരു പ്രത്യേക ആവശ്യം നിറവേറ്റുന്നുവെന്ന് ഉറപ്പാക്കുന്നു.", // NEW KEY
+                    problem_scheme: "പദ്ധതി വിവരങ്ങളുടെ അഭാവം", // NEW KEY
+                    problem_climate: "കാലാവസ്ഥാ അസ്ഥിരത/വരൾച്ച", // NEW KEY
+                    problem_market: "വില അസ്ഥിരത/മാർക്കറ്റ് പ്രവേശനം", // NEW KEY
+                    problem_knowledge: "കീട/രോഗ വിജ്ഞാന വിടവ്", // NEW KEY
                     contact_title: "ബന്ധപ്പെടുക",
                     contact_subtitle: "ചോദ്യങ്ങളോ പ്രതികരണങ്ങളോ ഉണ്ടോ? നിങ്ങളിൽ നിന്ന് കേൾക്കാൻ ഞങ്ങൾ ആഗ്രഹിക്കുന്നു. എപ്പോൾ വേണമെങ്കിലും ഞങ്ങളെ സമീപിക്കുക.",
                     contact_send_btn: "സന്ദേശം അയക്കുക",
@@ -470,52 +675,77 @@
                 },
                 kn: {
                     title: "ಅಗ್ರಿ-ಕನೆಕ್ಟ್",
-                    nav_home: "ಹೋಮ್", nav_services: "ಸೇವೆಗಳು", nav_about: "ನಮ್ಮ ಬಗ್ಗೆ", nav_contact: "ಸಂಪರ್ಕಿಸಿ",
+                    nav_home: "ಹೋಮ್", nav_services: "ಸೇವೆಗಳು", nav_about: "ನಮ್ಮ ಬಗ್ಗೆ", nav_contact: "ಸಂಪರ್ಕಿಸಿ",
                     login_btn: "ಲಾಗಿನ್ ಮಾಡಿ",
                     hero_title: "ರೈತರನ್ನು ಕೃಷಿಯ ಭವಿಷ್ಯಕ್ಕೆ ಸಂಪರ್ಕಿಸುವುದು",
-                    hero_subtitle: "ನಿಮ್ಮ ಬೆಳೆಗಳು, ಕೀಟಗಳು ಮತ್ತು ಮಾರುಕಟ್ಟೆ ಪ್ರವೃತ್ತಿಗಳಿಗಾಗಿ ತ್ವರಿತ, AI-ಚಾಲಿತ ಸಲಹೆ ಪಡೆಯಿರಿ.",
+                    hero_subtitle: "ನಿಮ್ಮ ಬೆಳೆಗಳು, ಕೀಟಗಳು ಮತ್ತು ಮಾರುಕಟ್ಟೆ ಪ್ರವೃತ್ತಿಗಳಿಗಾಗಿ ತ್ವರಿತ, AI-ಚಾಲಿತ ಸಲಹೆ ಪಡೆಯಿರಿ。",
                     hero_cta: "ನಮ್ಮ ಸೇವೆಗಳನ್ನು ಅನ್ವೇಷಿಸಿ",
                     services_title: "ನಮ್ಮ ಸೇವೆಗಳು",
+                    services_subtitle: "ಪ್ರತಿ ಹಂತದಲ್ಲೂ ರೈತರನ್ನು ಸಬಲೀಕರಣಗೊಳಿಸಲು ನಾವು ಸಮಗ್ರ ಉಪಕರಣಗಳು ಮತ್ತು ಮಾಹಿತಿಯ ಸೂಟ್ ಅನ್ನು ಒದಗಿಸುತ್ತೇವೆ。",
                     service_advisory_title: "AI ಸಲಹೆ",
-                    service_advisory_desc: "ನಿಮ್ಮ ಕೃಷಿ ಪ್ರಶ್ನೆಗಳಿಗೆ ಯಾವುದೇ ಭಾಷೆಯಲ್ಲಿ ತ್ವರಿತ ಉತ್ತರಗಳನ್ನು ಪಡೆಯಿರಿ.",
+                    service_advisory_desc: "ನಿಮ್ಮ ಕೃಷಿ ಪ್ರಶ್ನೆಗಳಿಗೆ ಯಾವುದೇ ಭಾಷೆಯಲ್ಲಿ ತ್ವರಿತ ಉತ್ತರಗಳನ್ನು ಪಡೆಯಿರಿ。",
                     service_pest_title: "ಕೀಟ ಮತ್ತು ರೋಗ ಪತ್ತೆ",
-                    service_pest_desc: "ರೋಗಗಳನ್ನು ಗುರುತಿಸಲು ಮತ್ತು ತಕ್ಷಣದ ಚಿಕಿತ್ಸಾ ಸಲಹೆಯನ್ನು ಪಡೆಯಲು ನಿಮ್ಮ ಬೆಳೆಯ ಫೋಟೋವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ.",
+                    service_pest_desc: "ರೋಗಗಳನ್ನು ಗುರುತಿಸಲು ಮತ್ತು ತಕ್ಷಣದ ಚಿಕಿತ್ಸಾ ಸಲಹೆಯನ್ನು ಪಡೆಯಲು ನಿಮ್ಮ ಬೆಳೆಯ ಫೋಟೋವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ。",
                     service_strategy_title: "ಬೆಳೆ ತಂತ್ರ",
-                    service_strategy_desc: "ನಿಮ್ಮ ಪ್ರದೇಶದಲ್ಲಿ ಬೆಳೆಯಲು ಅತ್ಯಂತ ಲಾಭದಾಯಕ ಬೆಳೆಗಳಿಗಾಗಿ AI-ಚಾಲಿತ ಶಿಫಾರಸುಗಳನ್ನು ಪಡೆಯಿರಿ.",
+                    service_strategy_desc: "ನಿಮ್ಮ ಪ್ರದೇಶದಲ್ಲಿ ಬೆಳೆಯಲು ಅತ್ಯಂತ ಲಾಭದಾಯಕ ಬೆಳೆಗಳಿಗಾಗಿ AI-ಚಾಲಿತ ಶಿಫಾರಸುಗಳನ್ನು ಪಡೆಯಿರಿ。",
                     service_market_title: "ಮಾರುಕಟ್ಟೆ ಮಾಹಿತಿ",
-                    service_market_desc: "ನೈಜ-ಸಮಯದ ಮಾರುಕಟ್ಟೆ ದರಗಳನ್ನು ಪ್ರವೇಶಿಸಿ ಮತ್ತು ಮಾರುಕಟ್ಟೆ ಪ್ರವೃತ್ತಿಗಳ ಮೇಲೆ AI ವಿಶ್ಲೇಷಣೆ ಪಡೆಯಿರಿ.",
+                    service_market_desc: "ನೈಜ-ಸಮಯದ ಮಾರುಕಟ್ಟೆ ದರಗಳನ್ನು ಪ್ರವೇಶಿಸಿ ಮತ್ತು ಮಾರುಕಟ್ಟೆ ಪ್ರವೃತ್ತಿಗಳ ಮೇಲೆ AI ವಿಶ್ಲೇಷಣೆ ಪಡೆಯಿರಿ。",
                     service_weather_title: "ಹವಾಮಾನ ಮುನ್ಸೂಚನೆ",
-                    service_weather_desc: "ನಿಮ್ಮ ಕೃಷಿ ಚಟುವಟಿಕೆಗಳನ್ನು ಯೋಜಿಸಲು ನಿಖರವಾದ ಹವಾಮಾನ ಮುನ್ಸೂಚನೆಗಳನ್ನು ಪಡೆಯಿರಿ.",
+                    service_weather_desc: "ನಿಮ್ಮ ಕೃಷಿ ಚಟುವಟಿಕೆಗಳನ್ನು ಯೋಜಿಸಲು ನಿಖರವಾದ ಹವಾಮಾನ ಮುನ್ಸೂಚನೆಗಳನ್ನು ಪಡೆಯಿರಿ。",
+                    service_schemes_title: "ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು", 
+                    service_schemes_desc: "ಬೆಳೆ ಸಾಲಗಳು, ಸಬ್ಸಿಡಿಗಳು ಮತ್ತು ರೈತ ಕಲ್ಯಾಣ ಯೋಜನೆಗಳ ಬಗ್ಗೆ ಅಗತ್ಯ ಮಾಹಿತಿಯನ್ನು ಪ್ರವೇಶಿಸಿ。", 
                     modal_advisory_title: "AI ಕೃಷಿ ಸಲಹೆಗಾರ",
                     modal_pest_title: "ಕೀಟ ಮತ್ತು ರೋಗ ಪತ್ತೆ",
                     modal_market_title: "ಮಾರುಕಟ್ಟೆ ಮಾಹಿತಿ",
                     modal_weather_title: "ಹವಾಮಾನ ಮುನ್ಸೂಚನೆ",
                     modal_strategy_title: "ಬೆಳೆ ತಂತ್ರ ಯೋಜಕ",
+                    modal_schemes_title: "ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು ಮತ್ತು ಸಾಲಗಳು", 
                     upload_btn: "ಬೆಳೆ ಚಿತ್ರವನ್ನು ಅಪ್ಲೋಡ್ ಮಾಡಿ",
                     get_weather_btn: "ಪಡೆಯಿರಿ",
-                    market_mock_data: "ಗಮನಿಸಿ: ಪ್ರದರ್ಶನ ಉದ್ದೇಶಗಳಿಗಾಗಿ ಅಣಕು ಡೇಟಾವನ್ನು ಪ್ರದರ್ಶಿಸಲಾಗುತ್ತಿದೆ.",
+                    get_schemes_btn: "ಮಾಹಿತಿ ಪಡೆಯಿರಿ", 
+                    scheme_loan: "ಬೆಳೆ ಸಾಲಗಳು / ಹಣಕಾಸು", 
+                    scheme_subsidy: "ಸಬ್ಸಿಡಿ ಕಾರ್ಯಕ್ರಮಗಳು", 
+                    scheme_insurance: "ವಿಮೆ ಮತ್ತು ಭದ್ರತೆ", 
+                    scheme_general: "ಸಾಮಾನ್ಯ ಕಲ್ಯಾಣ ಯೋಜನೆಗಳು", 
+                    market_mock_data: "ಗಮನಿಸಿ: ಪ್ರದರ್ಶನ ಉದ್ದೇಶಗಳಿಗಾಗಿ ಅಣಕು ಡೇಟಾವನ್ನು ಪ್ರದರ್ಶಿಸಲಾಗುತ್ತಿದೆ。",
                     market_price_trends: "ಬೆಲೆ ಪ್ರವೃತ್ತಿಗಳು (ಕಳೆದ 6 ತಿಂಗಳುಗಳು)",
                     market_crop_volume: "ಬೆಳೆ ಪ್ರಮಾಣದ ಪಾಲು",
                     market_analyze_btn: "✨ ಮಾರುಕಟ್ಟೆ ಪ್ರವೃತ್ತಿಗಳನ್ನು ವಿಶ್ಲೇಷಿಸಿ",
                     strategy_get_btn: "✨ ಬೆಳೆ ಶಿಫಾರಸುಗಳನ್ನು ಪಡೆಯಿರಿ",
                     soil_loamy: "ಗೋಡು ಮಣ್ಣು", soil_sandy: "ಮರಳು ಮಣ್ಣು", soil_clay: "ಜಿೇಡಿ ಮಣ್ಣು", soil_arid: "ಶುಷ್ಕ/ಮರುಭೂಮಿ ಮಣ್ಣು",
                     about_title: "ಅಗ್ರಿ-ಕನೆಕ್ಟ್ ಬಗ್ಗೆ",
-                    about_p1: "ಅಗ್ರಿ-ಕನೆಕ್ಟ್ ಅನ್ನು ಬೋರ್ಡ್‌ರೂಮ್‌ನಲ್ಲಿ ಅಲ್ಲ, ರಾಜಸ್ಥಾನದ ಹೊಲಗಳಲ್ಲಿ ರೂಪಿಸಲಾಯಿತು. ನಮ್ಮ ಪ್ರಯಾಣವು ರೈತರೊಂದಿಗೆ ನಡೆಯುವುದರೊಂದಿಗೆ ಪ್ರಾರಂಭವಾಯಿತು, ರಾಜಸ್ಥಾನದ ಕೃಷಿ ಸಮುದಾಯಗಳೊಂದಿಗೆ 10 ಕ್ಕೂ ಹೆಚ್ಚು ಆಳವಾದ ಸಂದರ್ಶನಗಳ ಮೂಲಕ ಅವರ ಕಳವಳಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳುವುದು. ನಾವು ಕೇವಲ ಡೇಟಾವನ್ನು ಸಂಗ್ರಹಿಸಲಿಲ್ಲ; ನಾವು ಅನಿರೀಕ್ಷಿತ ಮಾನ್ಸೂನ್‌ಗಳೊಂದಿಗೆ ಹೋರಾಡುವ, ಶುಷ್ಕ ಮಣ್ಣಿನ ಪರಿಸ್ಥಿತಿಗಳೊಂದಿಗೆ ಹೆಣಗಾಡುವ ಮತ್ತು ಸ್ಥಿತಿಸ್ಥಾಪಕ ಸ್ಥಳೀಯ ಕೀಟಗಳ ವಿರುದ್ಧ ನಿರಂತರ ಯುದ್ಧವನ್ನು ಮಾಡುವ ಕಥೆಗಳನ್ನು ಕೇಳಿದ್ದೇವೆ. ಈ ಸಂಭಾಷಣೆಗಳು ಕೇವಲ ಸಂಶೋಧನೆಯಾಗಿರಲಿಲ್ಲ; ಅವು ನಮ್ಮ ಅಡಿಪಾಯವಾಗಿದ್ದವು.",
-                    about_p2: "ಈ ಪ್ಲಾಟ್‌ಫಾರ್ಮ್‌ನಲ್ಲಿನ ಪ್ರತಿಯೊಂದು ವೈಶಿಷ್ಟ್ಯವು ನಾವು ರಾಜಸ್ಥಾನದ ರೈತರಿಂದ ನೇರವಾಗಿ ಕೇಳಿದ ನೈಜ ಸಮಸ್ಯೆಗೆ ಉತ್ತರವಾಗಿದೆ. ಆ ನೆಲಮಟ್ಟದ ಸವಾಲುಗಳನ್ನು ಸರಳ, ಶಕ್ತಿಯುತ ಡಿಜಿಟಲ್ ಸಾಧನಗಳಾಗಿ ಭಾಷಾಂತರಿಸಲು ನಾವು ಗೀಳಾಗಿದ್ದೇವೆ. ಪ್ರತಿಯೊಬ್ಬ ರೈತನ ಕೈಯಲ್ಲಿ ಪ್ರಾಯೋಗಿಕ, ಡೇಟಾ-ಚಾಲಿತ ಶಕ್ತಿಯನ್ನು ಇಡುವುದು, ಅವರ ಕಠಿಣ ಪರಿಶ್ರಮವು ಹೆಚ್ಚು ಲಾಭದಾಯಕ, ಸಮರ್ಥನೀಯ ಮತ್ತು ಸುರಕ್ಷಿತ ಭವಿಷ್ಯಕ್ಕೆ ಕಾರಣವಾಗುತ್ತದೆ ಎಂದು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳುವುದು ನಮ್ಮ ಉದ್ದೇಶವಾಗಿದೆ.",
-                    contact_title: "ಸಂಪರ್ಕದಲ್ಲಿರండి",
-                    contact_subtitle: "ಪ್ರಶ್ನೆಗಳು ಅಥವಾ ಪ್ರತಿಕ್ರಿಯೆ ಇದೆಯೇ? ನಿಮ್ಮಿಂದ ಕೇಳಲು ನಾವು ಇಷ್ಟಪಡುತ್ತೇವೆ. ಯಾವುದೇ ಸಮಯದಲ್ಲಿ ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ.",
+                    about_p1: "ಅಗ್ರಿ-ಕನೆಕ್ಟ್ ಅನ್ನು ಬೋರ್ಡ್‌ರೂಮ್‌ನಲ್ಲಿ ಅಲ್ಲ, ರಾಜಸ್ಥಾನದ ಹೊಲಗಳಲ್ಲಿ ರೂಪಿಸಲಾಯಿತು. ನಮ್ಮ ಪ್ರಯಾಣವು ರೈತರೊಂದಿಗೆ ನಡೆಯುವುದರೊಂದಿಗೆ ಪ್ರಾರಂಭವಾಯಿತು, ರಾಜಸ್ಥಾನದ ಕೃಷಿ ಸಮುದಾಯಗಳೊಂದಿಗೆ 10 ಕ್ಕೂ ಹೆಚ್ಚು ಆಳವಾದ ಸಂದರ್ಶನಗಳ ಮೂಲಕ ಅವರ ಕಳವಳಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳುವುದು. ನಾವು ಕೇವಲ ಡೇಟಾವನ್ನು ಸಂಗ್ರಹಿಸಲಿಲ್ಲ; ನಾವು ಅನಿರೀಕ್ಷಿತ ಮಾನ್ಸೂನ್‌ಗಳೊಂದಿಗೆ ಹೋರಾಡುವ, ಶುಷ್ಕ ಮಣ್ಣಿನ ಪರಿಸ್ಥಿತಿಗಳೊಂದಿಗೆ ಹೆಣಗಾಡುವ ಮತ್ತು ಸ್ಥಿತಿಸ್ಥಾಪಕ ಸ್ಥಳೀಯ ಕೀಟಗಳ ವಿರುದ್ಧ ನಿರಂತರ ಯುದ್ಧವನ್ನು ಮಾಡುವ ಕಥೆಗಳನ್ನು ಕೇಳಿದ್ದೇವೆ. ಈ ಸಂಭಾಷಣೆಗಳು ಕೇವಲ ಸಂಶೋಧನೆಯಾಗಿರಲಿಲ್ಲ; ಅವು ನಮ್ಮ ಅಡಿಪಾಯವಾಗಿದ್ದವು。",
+                    about_p2_video_intro: "ಈ ಪ್ಲಾಟ್‌ಫಾರ್ಮ್‌ನಲ್ಲಿನ ಪ್ರತಿಯೊಂದು ವೈಶಿಷ್ಟ್ಯವು ನಾವು ರಾಜಸ್ಥಾನದ ರೈತರಿಂದ ನೇರವಾಗಿ ಕೇಳಿದ ನೈಜ ಸಮಸ್ಯೆಗೆ ಉತ್ತರವಾಗಿದೆ. ನಮ್ಮ ಆರಂಭಿಕ ಫೀಲ್ಡ್ ಸಂಶೋಧನೆಯ ಕಿರು ತುಣುಕನ್ನು ವೀಕ್ಷಿಸಿ ಮತ್ತು ಕೃಷಿ ಸಮುದಾಯಗಳ ಸಮರ್ಪಣೆಯನ್ನು ನೋಡಿ。", 
+                    about_vision_title: "ನಮ್ಮ ಅಡಿಪಾಯ: ಹೊಲಗಳಲ್ಲಿ ನಡೆಯುವುದು", 
+                    about_survey_title: "ರೈತರ ಧ್ವನಿಗಳು: ನಮ್ಮ ಸಮೀಕ್ಷೆ ನೋಡಿ", 
+                    about_problems_title: "ರಾಜಸ್ಥಾನದ ರೈತರು ಎದುರಿಸುತ್ತಿರುವ ಪ್ರಮುಖ ಸವಾಲುಗಳು", // NEW KEY
+                    about_problems_desc: "ನಮ್ಮ ಆರಂಭಿಕ ಕ್ಷೇತ್ರ ಸಮೀಕ್ಷೆಗಳಿಂದ ಸಂಶ್ಲೇಷಿಸಿದ ಈ ಡೇಟಾವು, ಅಗ್ರಿ-ಕನೆಕ್ಟ್‌ನಲ್ಲಿ ಅಭಿವೃದ್ಧಿಪಡಿಸಿದ ವೈಶಿಷ್ಟ್ಯಗಳನ್ನು ನೇರವಾಗಿ ಮುನ್ನಡೆಸುತ್ತದೆ, ಪ್ರತಿ ಸಾಧನವು ಸ್ಪಷ್ಟವಾದ ಅಗತ್ಯವನ್ನು ಪರಿಹರಿಸುತ್ತದೆ ಎಂದು ಖಚಿತಪಡಿಸುತ್ತದೆ。", // NEW KEY
+                    problem_scheme: "ಯೋಜನೆಯ ಮಾಹಿತಿ ಕೊರತೆ", // NEW KEY
+                    problem_climate: "ಹವಾಮಾನದ ಅಸ್ಥಿರತೆ/ಬರ", // NEW KEY
+                    problem_market: "ಬೆಲೆ ಅಸ್ಥಿರತೆ/ಮಾರುಕಟ್ಟೆ ಪ್ರವೇಶ", // NEW KEY
+                    problem_knowledge: "ಕೀಟ/ರೋಗ ಜ್ಞಾನದ ಕೊರತೆ", // NEW KEY
+                    contact_title: "ಸಂಪರ್ಕದಲ್ಲಿರಾಗಿ",
+                    contact_subtitle: "ಪ್ರಶ್ನೆಗಳು ಅಥವಾ ಪ್ರತಿಕ್ರಿಯೆ ಇದೆಯೇ? ನಿಮ್ಮಿಂದ ಕೇಳಲು ನಾವು ಇಷ್ಟಪಡುತ್ತೇವೆ. ಯಾವುದೇ ಸಮಯದಲ್ಲಿ ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ。",
                     contact_send_btn: "ಸಂದೇಶ ಕಳುಹಿಸಿ",
                     login_modal_title: "ಅಗ್ರಿ-ಕನೆಕ್ಟ್‌ಗೆ ಲಾಗಿನ್ ಮಾಡಿ",
                     placeholder_name: "ನಿಮ್ಮ ಹೆಸರು",
-                    placeholder_email: "ನಿಮ್ಮ ಇಮೇಲ್",
-                    placeholder_message: "ನಿಮ್ಮ ಸಂದೇಶ",
+                    placeholder_email: "ನಿಮ್ಮ ಇಮೇಲ್",
+                    placeholder_message: "ನಿಮ್ಮ ಸಂದೇಶ",
                     placeholder_city: "ನಿಮ್ಮ ನಗರ/ಜಿಲ್ಲೆಯನ್ನು ನಮೂದಿಸಿ...",
                 }
             };
             
-            const languageSwitcher = document.getElementById('language-switcher');
-            languageSwitcher.addEventListener('change', (e) => switchLanguage(e.target.value));
+            // --- CORE FUNCTIONALITY ---
             
+            const languageSwitcher = document.getElementById('language-switcher');
+            const strategyErrorMessage = document.getElementById('strategy-error-message');
+
+            function showStrategyError(message) {
+                strategyErrorMessage.textContent = message;
+                strategyErrorMessage.classList.remove('hidden');
+                setTimeout(() => strategyErrorMessage.classList.add('hidden'), 4000);
+            }
+
             function switchLanguage(lang) {
                 const langData = translations[lang];
                 document.querySelectorAll('[data-lang]').forEach(el => {
@@ -530,14 +760,28 @@
                         el.placeholder = langData[key];
                     }
                 });
+                // Re-render chart on language switch
+                renderFarmerProblemsChart();
             }
+
+            // Initial setup
+            languageSwitcher.addEventListener('change', (e) => switchLanguage(e.target.value));
+            document.getElementById('footer-year').textContent = new Date().getFullYear();
+            
+            // --- PARALLAX EFFECT ---
+            const heroContent = document.querySelector('.hero-content');
+            window.addEventListener('scroll', () => {
+                const scrollY = window.scrollY;
+                // Increased factor to 0.4 for a more noticeable parallax effect
+                heroContent.style.transform = `translateY(${scrollY * 0.4}px)`;
+            });
 
             // --- MOBILE MENU ---
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
             mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
             document.querySelectorAll('#mobile-menu a').forEach(link => link.addEventListener('click', () => mobileMenu.classList.add('hidden')));
-            document.getElementById('footer-year').textContent = new Date().getFullYear();
+
 
             // --- MODAL HANDLING ---
             const modals = document.querySelectorAll('.modal-backdrop');
@@ -555,6 +799,15 @@
             function closeModal() {
                 modals.forEach(modal => {
                     modal.classList.remove('show');
+                    // Reset inputs/results on close for certain modals
+                    if (modal.id === 'pest-modal') {
+                        document.getElementById('image-preview').classList.add('hidden');
+                        document.getElementById('pest-result').innerHTML = `<p class="text-gray-500">Upload an image of your affected crop (leaf, stem, or fruit) to get an instant diagnosis and suggested treatment plan.</p>`;
+                    }
+                    if (modal.id === 'schemes-modal') {
+                        document.getElementById('schemes-result').innerHTML = `<p class="text-gray-500 text-center p-4 bg-amber-50 rounded-lg">Select a scheme category and click 'Fetch Info' to get the latest government programs relevant to Indian farmers.</p>`;
+                        document.getElementById('scheme-type-select').value = 'Loan';
+                    }
                     setTimeout(() => modal.style.display = 'none', 300); // match transition duration
                 });
             }
@@ -562,6 +815,8 @@
             serviceCards.forEach(card => card.addEventListener('click', () => openModal(card.dataset.service + '-modal')));
             document.querySelectorAll('.modal-close-btn').forEach(btn => btn.addEventListener('click', closeModal));
             document.getElementById('chatbot-open-btn').addEventListener('click', () => openModal('advisory-modal'));
+            
+            // Login button handlers
             document.getElementById('login-btn').addEventListener('click', (e) => {
                 e.preventDefault();
                 openModal('login-modal');
@@ -573,28 +828,48 @@
 
 
             // --- GEMINI API CALL HELPER ---
-            async function callGeminiAPI(payload) {
-                 try {
-                    const response = await fetch(API_URL_BASE, {
+            async function callGeminiAPI(payload, useSearch = true, attempts = 0) {
+                const apiUrl = useSearch ? 
+                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}` :
+                    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`; // Same model, just omitting search tool below
+
+                if (useSearch) {
+                    payload.tools = [{ "google_search": {} }];
+                }
+                
+                try {
+                    const response = await fetch(apiUrl, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
                     });
-                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                    const data = await response.json();
-                    if (!data.candidates || !data.candidates[0].content.parts[0].text) {
-                        throw new Error("Invalid API response structure.");
+                    
+                    if (!response.ok) {
+                        if (attempts < 3 && response.status === 429) { // Retry on rate limit (429)
+                            const delay = Math.pow(2, attempts) * 1000 + Math.random() * 1000;
+                            await new Promise(resolve => setTimeout(resolve, delay));
+                            return callGeminiAPI(payload, useSearch, attempts + 1);
+                        }
+                        throw new Error(`HTTP error! Status: ${response.status}`);
                     }
-                    return data.candidates[0].content.parts[0].text;
+
+                    const data = await response.json();
+                    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    
+                    if (!text) {
+                        throw new Error("Invalid API response structure or empty content.");
+                    }
+                    return text;
+
                 } catch (error) {
                     console.error("Gemini API call failed:", error);
-                    return "Sorry, I couldn't get a response. Please try again.";
+                    return `Sorry, I couldn't get a response. Error: ${error.message}. Please try again.`;
                 }
             }
             
             function showLoader(container) {
-                 if (typeof container === 'string') container = document.getElementById(container);
-                 if(container) container.innerHTML = `<div class="flex justify-center items-center p-4"><div class="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full loader"></div></div>`;
+                if (typeof container === 'string') container = document.getElementById(container);
+                if(container) container.innerHTML = `<div class="flex justify-center items-center p-4"><div class="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full loader"></div></div>`;
             }
 
             // --- AI ADVISORY CHATBOT ---
@@ -604,6 +879,7 @@
             
             async function handleChat() {
                 const userMessage = chatInput.value.trim();
+                const currentLang = languageSwitcher.value; // Determine language to use in prompt
                 if (!userMessage) return;
 
                 appendMessage(userMessage, 'user');
@@ -611,9 +887,14 @@
                 showLoader(chatbox);
                 chatbox.scrollTop = chatbox.scrollHeight;
 
-                const systemPrompt = "You are 'Agri-Connect', an expert AI agricultural assistant. Provide clear, concise, and helpful advice to farmers. Answer in the language of the user's query.";
-                const payload = { contents: [{ parts: [{text: systemPrompt + "\n\nUser query: " + userMessage }]}] };
-                const botResponse = await callGeminiAPI(payload);
+                const systemPrompt = `You are 'Agri-Connect', an expert AI agricultural assistant specializing in Indian farming practices, particularly focusing on semi-arid regions like Rajasthan. Provide clear, concise, and helpful advice to farmers. You must answer in the language of the user's query (e.g., if the user asks in Hindi, answer in Hindi). Use Google Search for up-to-date information on market prices or region-specific weather warnings if requested.`;
+                
+                const payload = {
+                    contents: [{ parts: [{ text: userMessage }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] }
+                };
+                
+                const botResponse = await callGeminiAPI(payload, true); // Use search grounding
                 
                 document.querySelector('#chatbox .flex.justify-center')?.remove(); // remove loader
                 appendMessage(botResponse, 'bot');
@@ -623,10 +904,13 @@
                 const messageDiv = document.createElement('div');
                 messageDiv.className = `chat-bubble p-3 rounded-lg ${type}`;
                 if (type === 'bot') {
-                    // Sanitize and format bot response
-                    messageDiv.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*/g, '<br> &bull; ');
+                    // Sanitize and format bot response (markdown to HTML)
+                    messageDiv.innerHTML = text
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
+                        .replace(/^(?!\s*\<strong\>)\* /gm, '<br>&bull; ') // Bullet points starting with *
+                        .replace(/\n/g, '<br>'); // Newlines to breaks
                 } else {
-                     messageDiv.textContent = text;
+                    messageDiv.textContent = text;
                 }
                 chatbox.appendChild(messageDiv);
                 chatbox.scrollTop = chatbox.scrollHeight;
@@ -635,7 +919,7 @@
             chatSendBtn.addEventListener('click', handleChat);
             chatInput.addEventListener('keypress', (e) => e.key === 'Enter' && handleChat());
 
-            // --- PEST DETECTION ---
+            // --- PEST DETECTION (Multimodal) ---
             const pestImageUpload = document.getElementById('pest-image-upload');
             const imagePreview = document.getElementById('image-preview');
             const pestResult = document.getElementById('pest-result');
@@ -644,48 +928,66 @@
                 const file = e.target.files[0];
                 if (!file) return;
 
+                // Preview Image
                 imagePreview.src = URL.createObjectURL(file);
                 imagePreview.classList.remove('hidden');
+                
                 showLoader(pestResult);
                 
                 const reader = new FileReader();
                 reader.onloadend = async () => {
                     const base64Data = reader.result.split(',')[1];
+                    const systemPrompt = "You are an expert plant pathologist. Analyze the provided image to identify the disease or pest affecting the crop. Respond with the following structure: **Diagnosis:** [Name of Disease/Pest], **Severity:** [Low/Medium/High], **Symptoms:** [List], **Recommended Treatment:** [Detailed, practical steps]. The response must be in English.";
+                    
                     const payload = {
                         contents: [{
                             parts: [
-                                { text: "Analyze this image of a plant. Identify any potential diseases or pests. Provide a brief description of the issue and suggest a common treatment plan." },
+                                { text: "Analyze this image of a plant/crop. Identify the issue and provide a treatment plan." },
                                 { inlineData: { mimeType: file.type, data: base64Data } }
                             ]
-                        }]
+                        }],
+                        systemInstruction: { parts: [{ text: systemPrompt }] }
                     };
-                    const response = await callGeminiAPI(payload);
-                    pestResult.innerHTML = response.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+
+                    const response = await callGeminiAPI(payload, false); // No search needed, focus on image analysis
+                    
+                    pestResult.innerHTML = response
+                        .replace(/\*\*(.*?)\*\*/g, '<strong class="text-emerald-700">$1</strong>')
+                        .replace(/\n/g, '<br>');
                 };
                 reader.readAsDataURL(file);
             });
             
-            // --- MARKET INFO ---
+            // --- MARKET INFO (Chart.js + Analysis) ---
+            let priceChart = null;
+            let volumeChart = null;
+
             const priceData = {
                 labels: ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
                 datasets: [
-                    { label: 'Wheat (₹/quintal)', data: [2100, 2150, 2200, 2180, 2250, 2300], borderColor: '#22c55e', tension: 0.1 },
-                    { label: 'Rice (₹/quintal)', data: [3400, 3450, 3500, 3550, 3600, 3580], borderColor: '#f97316', tension: 0.1 }
+                    { label: 'Wheat (₹/quintal)', data: [2100, 2150, 2200, 2180, 2250, 2300], borderColor: '#10b981', backgroundColor: 'rgba(16, 185, 129, 0.2)', tension: 0.2, fill: true },
+                    { label: 'Rice (₹/quintal)', data: [3400, 3450, 3500, 3550, 3600, 3580], borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.2)', tension: 0.2, fill: true }
                 ]
             };
 
             function renderMarketCharts() {
                 const priceCtx = document.getElementById('price-chart');
                 const volumeCtx = document.getElementById('volume-chart');
-                // Mock data
+                
                 const volumeData = {
                     labels: ['Wheat', 'Rice', 'Cotton', 'Sugarcane'],
-                    datasets: [{ data: [40, 30, 15, 15], backgroundColor: ['#22c55e', '#f97316', '#3b82f6', '#eab308'] }]
+                    datasets: [{ 
+                        data: [40, 30, 15, 15], 
+                        backgroundColor: ['#10b981', '#f59e0b', '#3b82f6', '#eab308'] ,
+                        hoverOffset: 4
+                    }]
                 };
-                if(window.priceChart instanceof Chart) window.priceChart.destroy();
-                if(window.volumeChart instanceof Chart) window.volumeChart.destroy();
-                window.priceChart = new Chart(priceCtx, { type: 'line', data: priceData });
-                window.volumeChart = new Chart(volumeCtx, { type: 'pie', data: volumeData });
+
+                if(priceChart instanceof Chart) priceChart.destroy();
+                if(volumeChart instanceof Chart) volumeChart.destroy();
+                
+                priceChart = new Chart(priceCtx, { type: 'line', data: priceData, options: { maintainAspectRatio: false } });
+                volumeChart = new Chart(volumeCtx, { type: 'pie', data: volumeData, options: { maintainAspectRatio: false } });
             }
 
             document.getElementById('market-analysis-btn').addEventListener('click', async () => {
@@ -693,88 +995,359 @@
                 resultDiv.classList.remove('hidden');
                 showLoader(resultDiv);
                 
-                const dataSummary = `Wheat prices changed from ${priceData.datasets[0].data[0]} to ${priceData.datasets[0].data.slice(-1)[0]}. Rice prices changed from ${priceData.datasets[1].data[0]} to ${priceData.datasets[1].data.slice(-1)[0]}.`;
-                const prompt = `You are an agricultural market analyst. Here are the price trends per quintal for the last 6 months in Rajasthan: ${dataSummary}. Based on this data, provide a short, easy-to-understand summary for a farmer. What is the general trend for each crop? Is it a good time to sell or hold? Keep the analysis to 2-3 sentences.`;
+                const dataSummary = `Wheat prices (₹/quintal) over the last 6 months were: ${priceData.datasets[0].data.join(', ')}. Rice prices (₹/quintal) were: ${priceData.datasets[1].data.join(', ')}.`;
+                const prompt = `You are an agricultural market analyst for India. Here are the price trends per quintal for Wheat and Rice over the last 6 months: ${dataSummary}. Based ONLY on this data, provide a short, easy-to-understand summary for a farmer (max 3 sentences). What is the general trend for each crop? Is it a good time to sell or hold current stock? The analysis must be in the active language set in the app.`;
+                
                 const payload = { contents: [{ parts: [{ text: prompt }] }] };
 
-                const response = await callGeminiAPI(payload);
+                const response = await callGeminiAPI(payload, true); // Use search grounding for better context
                 resultDiv.innerHTML = response;
             });
 
 
-            // --- WEATHER FORECAST ---
+            // --- WEATHER FORECAST (Structured JSON) ---
             const locationInput = document.getElementById('location-input');
             const getWeatherBtn = document.getElementById('get-weather-btn');
             const weatherResult = document.getElementById('weather-result');
 
             getWeatherBtn.addEventListener('click', async () => {
                 const location = locationInput.value.trim();
-                if (!location) return;
+                if (!location) {
+                    weatherResult.innerHTML = `<p class="text-red-500 text-center">Please enter a location first.</p>`;
+                    return;
+                }
                 showLoader(weatherResult);
                 
-                const prompt = `Provide a 5-day weather forecast for ${location}, Rajasthan. Respond ONLY with a JSON object in this exact format: { "forecast": [ { "day": "Monday", "temp_c": "30", "condition": "Sunny" } ] }.`;
+                const prompt = `Provide a 5-day weather forecast for ${location}, India. Be specific about farming conditions (e.g. 'chance of light rain'). Respond ONLY with a JSON object in this exact format: { "location": "${location}", "forecast": [ { "day": "Monday", "temp_c": "30", "condition": "Sunny" } ] }.`;
+                
                 const payload = {
                     contents: [{ parts: [{ text: prompt }] }],
                     generationConfig: { responseMimeType: "application/json" }
                 };
 
                 try {
-                    const responseText = await callGeminiAPI(payload);
-                    const data = JSON.parse(responseText.replace(/```json|```/g, ''));
-                    weatherResult.innerHTML = '';
+                    const responseText = await callGeminiAPI(payload, true); // Use search for real-time weather
+                    // Clean up potential markdown formatting around JSON
+                    const cleanedJson = responseText.replace(/```json|```/g, '').trim(); 
+                    const data = JSON.parse(cleanedJson);
+                    
+                    let html = `<h4 class="font-bold text-center text-lg mb-4 text-emerald-700">Forecast for ${data.location}</h4>`;
                     data.forecast.forEach(day => {
-                        weatherResult.innerHTML += `<div class="flex justify-between items-center p-2 bg-gray-100 rounded"><span>${day.day}</span><span>${day.temp_c}°C</span><span>${day.condition}</span></div>`;
+                        html += `<div class="flex justify-between items-center p-3 bg-gray-100 rounded-lg shadow-sm">
+                                <span><strong>${day.day}</strong></span>
+                                <span>${day.temp_c}°C</span>
+                                <span class="text-gray-600">${day.condition}</span>
+                            </div>`;
                     });
+                    weatherResult.innerHTML = html;
+
                 } catch (error) {
                     console.error("Failed to parse weather data:", error);
-                    weatherResult.innerHTML = `<p class="text-red-500">Could not retrieve forecast. Please check the location and try again.</p>`;
+                    weatherResult.innerHTML = `<p class="text-red-500 text-center p-4">Could not retrieve forecast for that location. Please try a major city name.</p>`;
                 }
             });
 
-            // --- CROP STRATEGY ---
+            // --- CROP STRATEGY (Structured JSON) ---
             const getStrategyBtn = document.getElementById('get-strategy-btn');
             const strategyResult = document.getElementById('strategy-result');
 
             getStrategyBtn.addEventListener('click', async () => {
                 const location = document.getElementById('strategy-location-input').value.trim();
                 const soil = document.getElementById('strategy-soil-input').value;
+                
+                strategyErrorMessage.classList.add('hidden'); // Clear previous errors
+
                 if (!location) {
-                    alert("Please enter a location.");
+                    showStrategyError(translations[languageSwitcher.value].placeholder_city.replace('...', '') + " is required.");
                     return;
                 }
                 showLoader(strategyResult);
 
-                const prompt = `You are an expert agricultural consultant specializing in the climate and economy of Rajasthan, India. A farmer from ${location}, Rajasthan with ${soil} soil wants profitable crop recommendations. Based on current market prices, climate suitability, and water requirements for that region, suggest the top 3 most profitable crops. For each crop, provide the following details: 'cropName', 'reasoning' (a short paragraph), 'estimatedProfitPerAcre' (in INR), and 'majorRisks' (as an array of strings). Respond ONLY with a JSON object in this exact format: { "recommendations": [ { "cropName": "Crop A", "reasoning": "...", "estimatedProfitPerAcre": "₹XX,XXX", "majorRisks": ["Risk 1", "Risk 2"] } ] }.`;
+                const prompt = `You are an expert agricultural consultant specializing in the climate and economy of India. A farmer from ${location} with ${soil} soil wants profitable crop recommendations. Based on current market prices, climate suitability, and water requirements for that region, suggest the top 3 most profitable crops for the next season. For each crop, provide the following details: 'cropName', 'reasoning' (a short paragraph), 'estimatedProfitPerAcre' (in Indian Rupees (INR) using '₹XX,XXX' format), and 'majorRisks' (as an array of strings). Respond ONLY with a JSON object in this exact format: { "recommendations": [ { "cropName": "Crop A", "reasoning": "...", "estimatedProfitPerAcre": "₹XX,XXX", "majorRisks": ["Risk 1", "Risk 2"] } ] }.`;
+                
                 const payload = {
                     contents: [{ parts: [{ text: prompt }] }],
                     generationConfig: { responseMimeType: "application/json" }
                 };
 
                 try {
-                    const responseText = await callGeminiAPI(payload);
-                    const data = JSON.parse(responseText.replace(/```json|```/g, ''));
+                    const responseText = await callGeminiAPI(payload, true); // Use search for market/climate data
+                    const cleanedJson = responseText.replace(/```json|```/g, '').trim(); 
+                    const data = JSON.parse(cleanedJson);
+                    
                     strategyResult.innerHTML = '';
                     data.recommendations.forEach(rec => {
-                        const risks = rec.majorRisks.map(risk => `<li class="text-sm">${risk}</li>`).join('');
+                        const risks = rec.majorRisks.map(risk => `<li class="text-sm text-gray-700">${risk}</li>`).join('');
                         strategyResult.innerHTML += `
-                            <div class="bg-gray-50 p-4 rounded-lg mb-4 border">
-                                <h4 class="font-bold text-lg text-green-700">${rec.cropName}</h4>
-                                <p class="text-gray-600 my-2">${rec.reasoning}</p>
-                                <div class="flex justify-between items-center mt-2 text-sm">
-                                    <div><strong>Est. Profit/Acre:</strong> <span class="font-semibold text-green-600">${rec.estimatedProfitPerAcre}</span></div>
-                                    <div><strong>Major Risks:</strong> <ul class="list-disc list-inside">${risks}</ul></div>
+                            <div class="bg-white p-4 rounded-lg mb-4 border border-emerald-200 shadow-md">
+                                <h4 class="font-bold text-xl text-emerald-700 border-b pb-2 mb-2">${rec.cropName}</h4>
+                                <p class="text-gray-700 my-3">${rec.reasoning}</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 mt-4 gap-4">
+                                    <div>
+                                        <strong class="text-gray-500 block">Est. Profit/Acre:</strong>
+                                        <span class="font-extrabold text-2xl text-emerald-600">${rec.estimatedProfitPerAcre}</span>
+                                    </div>
+                                    <div>
+                                        <strong class="text-gray-500 block">Major Risks:</strong> 
+                                        <ul class="list-disc list-inside space-y-1 mt-1">${risks}</ul>
+                                    </div>
                                 </div>
                             </div>
                         `;
                     });
                 } catch (error) {
                     console.error("Failed to parse strategy data:", error);
-                    strategyResult.innerHTML = `<p class="text-red-500">Could not retrieve recommendations. Please try again.</p>`;
+                    strategyResult.innerHTML = `<p class="text-red-500 p-4 bg-red-50 rounded-lg text-center">Could not retrieve recommendations. Please check your inputs and try again later.</p>`;
                 }
             });
+
+            // --- GOVERNMENT SCHEMES (NEW STRUCTURED JSON - Amber Accent) ---
+            document.getElementById('get-schemes-btn').addEventListener('click', async () => {
+                const schemeType = document.getElementById('scheme-type-select').value;
+                const schemesResult = document.getElementById('schemes-result');
+
+                showLoader(schemesResult);
+
+                const prompt = `You are a government welfare program expert for Indian farmers, specifically focusing on national and state (Rajasthan) schemes. The user is interested in ${schemeType} schemes. Use Google Search to find the top 3 most relevant and currently active schemes related to '${schemeType}' for farmers. Respond ONLY with a JSON object in this exact format: { "schemes": [ { "name": "Scheme A Name", "category": "${schemeType}", "summary": "Brief explanation of scheme's benefits and target beneficiaries (max 2 sentences).", "eligibility": "Who can apply, e.g., Small farmers, land-holders under 5 acres.", "link": "A short, relevant, mock link (e.g., /pmfby-details)" } ] }.`;
+                
+                const payload = {
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: { responseMimeType: "application/json" }
+                };
+
+                try {
+                    const responseText = await callGeminiAPI(payload, true); // Use search for live schemes
+                    const cleanedJson = responseText.replace(/```json|```/g, '').trim();
+                    const data = JSON.parse(cleanedJson);
+                    
+                    schemesResult.innerHTML = '';
+                    data.schemes.forEach(scheme => {
+                        schemesResult.innerHTML += `
+                            <div class="bg-white p-5 rounded-lg border border-amber-200 shadow-lg">
+                                <h4 class="font-bold text-xl text-amber-700 mb-2">${scheme.name}</h4>
+                                <p class="text-gray-700 mb-3">${scheme.summary}</p>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm">
+                                    <p><strong class="text-gray-500">Category:</strong> ${scheme.category}</p>
+                                    <p class="md:col-span-2"><strong class="text-gray-500">Eligibility:</strong> ${scheme.eligibility}</p>
+                                </div>
+                                <a href="${scheme.link}" target="_blank" class="text-amber-600 hover:text-amber-800 font-semibold text-sm mt-3 inline-block transition duration-200">View Details & Apply &rarr;</a>
+                            </div>
+                        `;
+                    });
+                } catch (error) {
+                    console.error("Failed to fetch schemes data:", error);
+                    schemesResult.innerHTML = `<p class="text-red-500 p-4 bg-red-50 rounded-lg text-center">Could not retrieve scheme information. Please try again or check your search term.</p>`;
+                }
+            });
+
+            // --- FARMER PROBLEMS CHART (NEW/IMPROVED) ---
+            let farmerProblemsChart = null;
+
+            function renderFarmerProblemsChart() {
+                const chartCtx = document.getElementById('farmer-problems-chart');
+                if (!chartCtx) return;
+
+                if (farmerProblemsChart instanceof Chart) farmerProblemsChart.destroy();
+
+                const currentLang = languageSwitcher.value;
+                const langData = translations[currentLang];
+
+                const data = {
+                    labels: [
+                        langData.problem_scheme, 
+                        langData.problem_climate, 
+                        langData.problem_market, 
+                        langData.problem_knowledge
+                    ],
+                    datasets: [{
+                        label: langData.about_problems_title,
+                        data: [85, 92, 78, 70], // Mock severity data (higher means bigger problem)
+                        // Use softer/more professional colors with borders
+                        backgroundColor: [
+                            '#fcd34d', // Amber-300
+                            '#f87171',  // Red-400 
+                            '#60a5fa', // Blue-400
+                            '#34d399'  // Emerald-400
+                        ],
+                        borderColor: [
+                            '#b45309', // Amber-800
+                            '#b91c1c', // Red-800
+                            '#1e40af', // Blue-800
+                            '#065f46'  // Emerald-800
+                        ],
+                        borderWidth: 1.5,
+                        borderRadius: 6 // Rounded bars
+                    }]
+                };
+
+                farmerProblemsChart = new Chart(chartCtx, {
+                    type: 'bar',
+                    data: data,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y', // Horizontal bars
+                        layout: { padding: { left: 10, right: 20 } },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { // Enhanced tooltip for better UX
+                                mode: 'index',
+                                intersect: false,
+                                backgroundColor: '#10b981', // Emerald background
+                                titleFont: { weight: 'bold' },
+                                bodyFont: { size: 14 },
+                                callbacks: {
+                                    label: function(context) {
+                                        return ` Severity: ${context.parsed.x} / 100`;
+                                    }
+                                }
+                            },
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                max: 100,
+                                grid: { color: 'rgba(0, 0, 0, 0.05)' }, // Light grid lines
+                                ticks: { color: '#4b5563' },
+                                title: {
+                                    display: true,
+                                    text: 'Perceived Severity Score (0-100)',
+                                    color: '#4b5563',
+                                    font: { size: 14 }
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    mirror: false,
+                                    padding: 10,
+                                    color: '#4b5563',
+                                    font: { weight: 'bold' }
+                                },
+                                grid: { drawTicks: false, drawBorder: false } // Cleaner y-axis
+                            }
+                        }
+                    }
+                });
+            }
+
+
+            // --- HERO CANVAS ANIMATION (Digital Crop Field) ---
+            function initializeHeroAnimation() {
+                const canvas = document.getElementById('hero-canvas');
+                const ctx = canvas.getContext('2d');
+                let width, height;
+
+                // Array to hold the "sprouts" or data points
+                let particles = [];
+                // *** Increased particle count to 250 for denser effect (was 200) ***
+                const numParticles = 250; 
+                const particleColor = 'rgba(16, 185, 129, 0.9)'; // Brighter Emerald Green
+                const lineCount = 6; 
+
+                class Particle {
+                    constructor(x, y) {
+                        this.baseX = x;
+                        this.baseY = y;
+                        // *** Faster min/max speed factor ***
+                        this.s = 0.8 + Math.random() * 1.0; 
+                        this.timeOffset = Math.random() * 1000;
+                        // Taller plants
+                        this.maxHeight = height * (0.2 + Math.random() * 0.4); 
+                    }
+
+                    draw() {
+                        // *** Faster time factor ***
+                        const time = Date.now() * 0.009 + this.timeOffset; 
+                        // More horizontal sway
+                        const swayX = Math.sin(time * 0.3 * this.s) * 18; 
+                        // More vertical flutter
+                        const swayY = Math.cos(time * 0.15 * this.s) * 8;
+                        
+                        ctx.strokeStyle = particleColor;
+                        ctx.lineWidth = 1.5; 
+                        
+                        // Draw stem/main line
+                        ctx.beginPath();
+                        ctx.moveTo(this.baseX, this.baseY);
+                        ctx.lineTo(this.baseX + swayX, this.baseY - this.maxHeight + swayY);
+                        ctx.stroke();
+
+                        // Draw "leaves" or data branches/nodes
+                        for (let i = 1; i <= lineCount; i++) {
+                            const ratio = i / (lineCount + 1);
+                            const currentY = this.baseY - this.maxHeight * ratio;
+                            const currentX = this.baseX + swayX * ratio;
+
+                            ctx.beginPath();
+                            ctx.moveTo(currentX, currentY);
+                            // Draw a small horizontal data point/leaf
+                            ctx.lineTo(currentX + Math.sin(time * 0.3 + i * 0.7) * 10 * this.s * ratio, currentY);
+                            ctx.stroke();
+
+                            // Draw a bright dot at the node (Emerald)
+                            ctx.fillStyle = 'rgba(16, 185, 129, 1)';
+                            ctx.beginPath();
+                            ctx.arc(currentX, currentY, 1.5, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+                }
+
+                function drawGrid() {
+                    // Draw a subtle fixed horizontal grid (Emerald)
+                    ctx.strokeStyle = 'rgba(16, 185, 129, 0.1)'; 
+                    ctx.lineWidth = 0.5;
+                    const gridSpacing = 50;
+
+                    for (let y = height; y > height * 0.5; y -= gridSpacing) {
+                        ctx.beginPath();
+                        ctx.moveTo(0, y);
+                        ctx.lineTo(width, y);
+                        ctx.stroke();
+                    }
+                }
+
+
+                function initParticles() {
+                    particles = [];
+                    // Place particles horizontally across the bottom
+                    for (let i = 0; i < numParticles; i++) {
+                        // Spread particles with some randomness
+                        const x = width / numParticles * i + (Math.random() * width / numParticles * 0.5);
+                        const y = height * 0.95 + Math.random() * 20; // Start near the bottom with slight variation
+                        particles.push(new Particle(x, y));
+                    }
+                }
+
+                function resizeCanvas() {
+                    width = canvas.width = canvas.offsetWidth;
+                    height = canvas.height = canvas.offsetHeight;
+                    initParticles();
+                }
+
+                function animate() {
+                    requestAnimationFrame(animate);
+
+                    // Re-add solid dark background to keep contrast high
+                    ctx.fillStyle = 'rgba(23, 23, 23, 1)'; /* Darker Slate/Black */
+                    ctx.fillRect(0, 0, width, height);
+
+                    drawGrid();
+                    
+                    particles.forEach(p => p.draw());
+                }
+
+                // Initialize animation on load and handle resizing
+                window.addEventListener('resize', resizeCanvas);
+                resizeCanvas(); 
+                animate();
+            }
+            
+            initializeHeroAnimation(); 
+
+            // Initial chart render when DOM is ready
+            renderFarmerProblemsChart();
         });
     </script>
 </body>
 </html>
-
-
